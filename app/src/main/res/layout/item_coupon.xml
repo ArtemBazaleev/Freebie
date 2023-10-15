@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="@dimen/coupon_width"
+        android:layout_height="@dimen/coupon_height"
+        android:layout_marginStart="@dimen/default_side_margin"
+        android:layout_marginTop="@dimen/default_top_margin"
+        android:layout_marginEnd="@dimen/default_side_margin"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="@dimen/coupon_radius"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_coupon_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_coupon_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/discount_label"
+                android:drawablePadding="@dimen/default_side_margin_s"
+                android:gravity="center"
+                android:paddingStart="@dimen/default_side_margin_s"
+                android:paddingEnd="@dimen/default_side_margin_s"
+                android:text="-30%"
+                android:paddingTop="@dimen/default_side_margin_s"
+                android:paddingBottom="@dimen/default_side_margin_s"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
+                android:textColor="@color/white"
+                app:drawableStartCompat="@drawable/ic_discount_label_24"
+                app:drawableTint="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.6" />
+
+            <TextView
+                android:id="@+id/tv_coupon_name"
+                style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_side_margin_s"
+                android:layout_marginTop="@dimen/default_top_margin"
+                android:layout_marginEnd="@dimen/default_side_margin_s"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Get burger with discount"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_coupon_image" />
+
+            <TextView
+                android:id="@+id/tv_coupon_description"
+                style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_side_margin_s"
+                android:layout_marginEnd="@dimen/default_side_margin_s"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Food - Fastfood"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_coupon_name" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

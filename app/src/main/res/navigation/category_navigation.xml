@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/navigation_category"
+    android:id="@+id/category_navigation">
+
+    <fragment
+        android:id="@+id/navigation_category"
+        android:name="com.freebie.frieebiemobile.ui.category.CategoryFragment"
+        android:label="@string/app_bar_category"
+        tools:layout="@layout/fragment_category" >
+        <action
+            app:restoreState="true"
+            android:id="@+id/action_navigation_category_to_navigation_category_feed"
+            app:destination="@id/navigation_category_feed" />
+        <argument
+            android:name="categoryType"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_category_feed"
+        android:name="com.freebie.frieebiemobile.ui.feed.FeedFragment"
+        tools:layout="@layout/fragment_feed" />
+
+
+</navigation>

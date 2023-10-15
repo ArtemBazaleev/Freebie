@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/navigation_home"
+    android:id="@+id/feed_navigation">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.freebie.frieebiemobile.ui.feed.FeedFragment"
+        android:label="@string/app_bar_all"
+        tools:layout="@layout/fragment_feed" >
+        <action
+            android:id="@+id/action_navigation_feed"
+            app:restoreState="true"/>
+    </fragment>
+
+</navigation>

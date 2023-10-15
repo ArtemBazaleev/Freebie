@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Freebie</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="app_bar_all">All</string>
+    <string name="app_bar_category">Category</string>
+    <string name="app_bar_account">Account</string>
+    <string name="no_internet">Oops, no internet</string>
+    <string name="no_data">Oops, nothing found</string>
+    <string name="generic_error_message">Oops, something went wrong</string>
+    <string name="all_discounts">All discounts</string>
+    <string name="categories">Categories</string>
+    <string name="auth_client_id">552671974636-05no6fjcdn560p6hjs9qnfde6ja6nk3p.apps.googleusercontent.com</string>
+</resources>

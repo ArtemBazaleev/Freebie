@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/company_avatar"
+        android:layout_width="@dimen/avatar_small_size"
+        android:layout_height="@dimen/avatar_small_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/default_side_margin"
+        android:layout_marginTop="@dimen/default_top_margin"
+        tools:background="@color/cardview_dark_background"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+        android:id="@+id/company_name"
+        android:textColor="@color/primary_text"
+        android:textSize="22sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_side_margin_l"
+        android:layout_marginEnd="@dimen/default_side_margin"
+        android:lines="1"
+        android:ellipsize="end"
+        tools:text="Mcdonalds"
+        app:layout_constraintBottom_toBottomOf="@+id/company_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/company_avatar"
+        app:layout_constraintTop_toTopOf="@+id/company_avatar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
