@@ -2,12 +2,9 @@ package com.freebie.frieebiemobile.ui.utils
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.airbnb.lottie.LottieAnimationView
-import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.R
 
 class PlaceHolderView @JvmOverloads constructor(

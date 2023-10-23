@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavOptions
@@ -14,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.freebie.frieebiemobile.databinding.ActivityMainBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
+import com.freebie.frieebiemobile.ui.account.AccountViewModel
 import com.freebie.frieebiemobile.ui.utils.NavHolder
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.ref.WeakReference
@@ -25,6 +28,8 @@ class MainActivity : AppCompatActivity(), NavHolder {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var navController: NavController
+
+    private val viewModel by viewModels<MainActivityViewModel>()
 
     @Inject
     lateinit var googleAuth: GoogleAuth
@@ -86,7 +91,8 @@ class MainActivity : AppCompatActivity(), NavHolder {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        googleAuth.onResult(requestCode, resultCode, data)
+        val cred = googleAuth.onResult(requestCode, resultCode, data)
+        cred?.let(viewModel::credentialsReceived)
     }
 
 }

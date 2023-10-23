@@ -1,4 +1,4 @@
-package com.freebie.frieebiemobile.ui.notifications
+package com.freebie.frieebiemobile.ui.account
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.freebie.frieebiemobile.databinding.FragmentNotificationsBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
-import com.freebie.frieebiemobile.ui.feed.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -46,7 +44,9 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.googleSignIn.setOnClickListener { googleAuth.requestAuth(requireActivity()) }
+        binding.googleSignIn.setOnClickListener {
+            googleAuth.requestAuth(requireActivity())
+        }
     }
 
     override fun onDestroyView() {

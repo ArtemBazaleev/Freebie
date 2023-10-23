@@ -1,28 +1,40 @@
 package com.freebie.frieebiemobile.login
 
+import android.R.attr.label
+import android.R.attr.text
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat.startIntentSenderForResult
+import androidx.core.content.ContextCompat.getSystemService
 import com.freebie.frieebiemobile.R
+import com.freebie.frieebiemobile.network.HttpAccess
+import com.freebie.frieebiemobile.network.Method
+import com.freebie.protos.AuthApiProtos
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInCredential
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 interface GoogleAuth {
     fun requestAuth(activity: Activity)
-    fun onResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun onResult(requestCode: Int, resultCode: Int, data: Intent?): SignInCredential?
 }
 
 class GoogleAuthImpl @Inject constructor(
-    @ApplicationContext private val applicationContext: Context
+    @ApplicationContext private val applicationContext: Context,
+    private val httpAccess: HttpAccess
 ) : GoogleAuth {
 
     private val oneTapClient by lazy { Identity.getSignInClient(applicationContext) }
@@ -47,54 +59,16 @@ class GoogleAuthImpl @Inject constructor(
             }
     }
 
-    override fun onResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
+    override fun onResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ): SignInCredential? {
+        return when (requestCode) {
             REQ_ONE_TAP -> {
-                try {
-                    val credential = oneTapClient.getSignInCredentialFromIntent(data)
-                    val idToken = credential.googleIdToken
-                    val username = credential.id
-                    val password = credential.password
-                    when {
-                        idToken != null -> {
-                            // Got an ID token from Google. Use it to authenticate
-                            // with your backend.
-                            Log.d(TAG, "Got ID token. $idToken")
-                        }
-
-                        password != null -> {
-                            // Got a saved username and password. Use them to authenticate
-                            // with your backend.
-                            Log.d(TAG, "Got password.")
-                        }
-
-                        else -> {
-                            // Shouldn't happen.
-                            Log.d(TAG, "No ID token or password!")
-                        }
-                    }
-                } catch (e: ApiException) {
-                    when (e.statusCode) {
-                        CommonStatusCodes.CANCELED -> {
-                            Log.d(TAG, "One-tap dialog was closed.")
-                            // Don't re-prompt the user.
-                            //showOneTapUI = false
-                        }
-
-                        CommonStatusCodes.NETWORK_ERROR -> {
-                            Log.d(TAG, "One-tap encountered a network error.")
-                            // Try again or just ignore.
-                        }
-
-                        else -> {
-                            Log.d(
-                                TAG, "Couldn't get credential from result." +
-                                        " (${e.localizedMessage})"
-                            )
-                        }
-                    }
-                }
+                oneTapClient.getSignInCredentialFromIntent(data)
             }
+            else -> null
         }
     }
 
