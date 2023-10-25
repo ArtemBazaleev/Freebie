@@ -6,6 +6,8 @@ import com.freebie.frieebiemobile.login.data.repository.AuthRepository
 import com.freebie.frieebiemobile.login.data.repository.AuthRepositoryImpl
 import com.freebie.frieebiemobile.login.domain.AuthGoogleUseCase
 import com.freebie.frieebiemobile.login.domain.AuthGoogleUseCaseImpl
+import com.freebie.frieebiemobile.login.domain.AuthStatusUseCase
+import com.freebie.frieebiemobile.login.domain.AuthStatusUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,6 +31,9 @@ interface BindVmModule {
 
     @Binds
     fun bindAuthUseCase(impl: AuthGoogleUseCaseImpl): AuthGoogleUseCase
+
+    @Binds
+    fun bindAuthStatusUseCase(impl: AuthStatusUseCaseImpl): AuthStatusUseCase
 
 }
 

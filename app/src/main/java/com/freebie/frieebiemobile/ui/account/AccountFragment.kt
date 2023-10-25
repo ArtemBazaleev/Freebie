@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.freebie.frieebiemobile.databinding.FragmentNotificationsBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -25,6 +29,7 @@ class AccountFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val accountViewModel by viewModels<AccountViewModel>()
+    private var openOneTapAuthJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,8 +49,11 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.googleSignIn.setOnClickListener {
-            googleAuth.requestAuth(requireActivity())
+        binding.googleSignIn.setOnClickListener {//todo throtled
+            if (openOneTapAuthJob?.isActive == true) return@setOnClickListener
+            openOneTapAuthJob = lifecycleScope.launch {
+                googleAuth.requestAuth(requireActivity())
+            }
         }
     }
 

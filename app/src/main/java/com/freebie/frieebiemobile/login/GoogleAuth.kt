@@ -24,17 +24,21 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.jvm.Throws
 
 
 interface GoogleAuth {
-    fun requestAuth(activity: Activity)
+    suspend fun requestAuth(activity: Activity): Boolean
+    @Throws(ApiException::class)
     fun onResult(requestCode: Int, resultCode: Int, data: Intent?): SignInCredential?
 }
 
 class GoogleAuthImpl @Inject constructor(
-    @ApplicationContext private val applicationContext: Context,
-    private val httpAccess: HttpAccess
+    @ApplicationContext private val applicationContext: Context
 ) : GoogleAuth {
 
     private val oneTapClient by lazy { Identity.getSignInClient(applicationContext) }
@@ -42,7 +46,7 @@ class GoogleAuthImpl @Inject constructor(
     private val TAG = "GoogleAuthImpl"
     private val REQ_ONE_TAP = 3
 
-    override fun requestAuth(activity: Activity) {
+    override suspend fun requestAuth(activity: Activity): Boolean = suspendCancellableCoroutine{ continuation ->
         oneTapClient.beginSignIn(signInRequest)
             .addOnSuccessListener { result ->
                 try {
@@ -51,14 +55,18 @@ class GoogleAuthImpl @Inject constructor(
                         result.pendingIntent.intentSender, REQ_ONE_TAP,
                         null, 0, 0, 0, Bundle.EMPTY
                     )
+                    continuation.resume(true)
                 } catch (e: IntentSender.SendIntentException) {
                     Log.e(TAG, "Couldn't start One Tap UI: ${e.localizedMessage}")
+                    continuation.resume(false)
                 }
             }.addOnFailureListener { error ->
+                continuation.resume(false)
                 Log.d("GoogleAuthImpl", "requestAuth fail error = $error")
             }
     }
 
+    @Throws(ApiException::class)
     override fun onResult(
         requestCode: Int,
         resultCode: Int,

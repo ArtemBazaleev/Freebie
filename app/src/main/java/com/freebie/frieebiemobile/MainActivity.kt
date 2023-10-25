@@ -91,8 +91,10 @@ class MainActivity : AppCompatActivity(), NavHolder {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val cred = googleAuth.onResult(requestCode, resultCode, data)
-        cred?.let(viewModel::credentialsReceived)
+        runCatching {
+            val cred = googleAuth.onResult(requestCode, resultCode, data)
+            cred?.let(viewModel::credentialsReceived)
+        }
     }
 
 }
