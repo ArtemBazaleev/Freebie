@@ -1,5 +1,6 @@
 package com.freebie.frieebiemobile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.login.domain.AuthGoogleUseCase
@@ -15,7 +16,8 @@ class MainActivityViewModel @Inject constructor(
 
     fun credentialsReceived(credential: SignInCredential) {
         viewModelScope.launch {
-            authGoogleUseCase.auth(credential)
+            val profile = authGoogleUseCase.auth(credential)
+            Log.d("MainActivityViewModel", "profile = ${profile.getOrNull()}")
         }
     }
 }

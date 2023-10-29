@@ -1,11 +1,9 @@
-package com.freebie.frieebiemobile.ui.account
+package com.freebie.frieebiemobile.ui.account.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.freebie.frieebiemobile.login.GoogleAuth
-import com.freebie.frieebiemobile.login.domain.AuthGoogleUseCase
 import com.freebie.frieebiemobile.login.domain.AuthStatus
 import com.freebie.frieebiemobile.login.domain.AuthStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -3,12 +3,13 @@ package com.freebie.frieebiemobile.login.data.repository
 import com.freebie.frieebiemobile.login.TokenStorage
 import com.freebie.frieebiemobile.login.data.api.AuthApi
 import com.freebie.frieebiemobile.login.domain.AuthStatus
+import com.freebie.frieebiemobile.login.domain.ProfileModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface AuthRepository {
-    suspend fun auth(token: String): Result<Boolean>
+    suspend fun auth(token: String): Result<ProfileModel>
     suspend fun isAuthorized(): AuthStatus
 }
 
@@ -18,11 +19,18 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
 
-    override suspend fun auth(token: String): Result<Boolean> = withContext(Dispatchers.IO) {
+    override suspend fun auth(token: String): Result<ProfileModel> = withContext(Dispatchers.IO) {
         return@withContext try {
-            val response = api.auth(token)
-            saveTokenToPreferences(token)
-            return@withContext Result.success(response.isSuccess)
+            val response = api.auth(token).getOrThrow()
+            saveTokenToPreferences(response.first)
+            return@withContext Result.success(
+                ProfileModel(
+                    firstName = response.second.name,
+                    lastName = response.second.familyName,
+                    avatar = response.second.pictureUrl,
+                    uniqueName = response.second.userId
+                )
+            )
         } catch (e: Exception) {
             Result.failure(e)
         }

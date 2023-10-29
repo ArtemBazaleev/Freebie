@@ -18,11 +18,13 @@ class GoogleAuthStorageImpl @Inject constructor(
     }
 
     override suspend fun isEligibleForAuth(): Boolean {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
+        return false
     }
 
     private fun lastErrorTime(): Long {
-        TODO()
+        //TODO()
+        return 0
     }
 
     companion object {

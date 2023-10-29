@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavOptions
@@ -16,7 +15,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.freebie.frieebiemobile.databinding.ActivityMainBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
-import com.freebie.frieebiemobile.ui.account.AccountViewModel
 import com.freebie.frieebiemobile.ui.utils.NavHolder
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.ref.WeakReference
