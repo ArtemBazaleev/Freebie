@@ -2,11 +2,17 @@ package com.freebie.frieebiemobile.ui.account.presentation
 
 import android.util.TypedValue
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentAccountBinding
+import com.freebie.frieebiemobile.ui.account.presentation.model.UserUiModel
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.Behavior.DragCallback
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.roundToInt
+
 
 class AccountToolbarController @Inject constructor() {
 
@@ -17,7 +23,7 @@ class AccountToolbarController @Inject constructor() {
     private var avatarAnimateStartPointY: Float = 0F
     private var avatarCollapseAnimationChangeWeight: Float = 0F
     private var isCalculated = false
-    private var verticalToolbarAvatarMargin =0F
+    private var verticalToolbarAvatarMargin = 0F
 
 
     fun initToolbarAnimation(binding: FragmentAccountBinding) {
@@ -38,6 +44,8 @@ class AccountToolbarController @Inject constructor() {
             val offset = abs(i / appBarLayout.totalScrollRange.toFloat())
             updateViews(offset, binding)
         }
+        binding.appBarLayout.setExpanded(false)
+        updateViews(0f, binding)
     }
 
 
@@ -65,11 +73,12 @@ class AccountToolbarController @Inject constructor() {
             when {
                 cashCollapseState != null && cashCollapseState != this -> {
                     when (first) {
-                        TO_EXPANDED ->  {
+                        TO_EXPANDED -> {
                             binding.imgbAvatarWrap.translationX = 0F
                             binding.tvProfileNameSingle.visibility = View.INVISIBLE
                         }
-                        TO_COLLAPSED ->  {
+
+                        TO_COLLAPSED -> {
                             /* show titles on toolbar with animation*/
                             binding.tvProfileNameSingle.apply {
                                 visibility = View.VISIBLE
@@ -80,6 +89,7 @@ class AccountToolbarController @Inject constructor() {
                     }
                     cashCollapseState = Pair(first, SWITCHED)
                 }
+
                 else -> {
                     cashCollapseState = Pair(first, WAIT_FOR_SWITCH)
                 }
@@ -89,17 +99,24 @@ class AccountToolbarController @Inject constructor() {
             binding.imgbAvatarWrap.apply {
                 when {
                     offset > avatarAnimateStartPointY -> {
-                        val avatarCollapseAnimateOffset = (offset - avatarAnimateStartPointY) * avatarCollapseAnimationChangeWeight
-                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * avatarCollapseAnimateOffset
+                        val avatarCollapseAnimateOffset =
+                            (offset - avatarAnimateStartPointY) * avatarCollapseAnimationChangeWeight
+                        val avatarSize =
+                            EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * avatarCollapseAnimateOffset
                         this.layoutParams.also {
                             it.height = avatarSize.roundToInt()
                             it.width = avatarSize.roundToInt()
                         }
                         binding.tvWorkaround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
 
-                        this.translationX = ((binding.appBarLayout.width - horizontalToolbarAvatarMargin - avatarSize) / 2) * avatarCollapseAnimateOffset
-                        this.translationY = ((binding.animToolbar.height  - verticalToolbarAvatarMargin - avatarSize ) / 2) * avatarCollapseAnimateOffset
+                        this.translationX =
+                            ((binding.appBarLayout.width - horizontalToolbarAvatarMargin - avatarSize) / 2) * avatarCollapseAnimateOffset
+                        this.translationY =
+                            ((binding.animToolbar.height - verticalToolbarAvatarMargin - avatarSize) / 2) * avatarCollapseAnimateOffset
+                        binding.tvProfileName.translationY =
+                            ((binding.animToolbar.height - verticalToolbarAvatarMargin - avatarSize) / 2) * avatarCollapseAnimateOffset
                     }
+
                     else -> this.layoutParams.also {
                         if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
                             it.height = EXPAND_AVATAR_SIZE.toInt()
@@ -111,6 +128,16 @@ class AccountToolbarController @Inject constructor() {
                 }
             }
         }
+    }
+
+    fun renderProfile(user: UserUiModel?, binding: FragmentAccountBinding) {
+        if (user == null) return
+        Glide.with(binding.root)
+            .load(user.avatar)
+            .circleCrop()
+            .into(binding.imgbAvatarWrap)
+        binding.tvProfileName.text = user.name + "\n" + user.lastName
+        //changeAnimation(binding, true)
     }
 
     companion object {

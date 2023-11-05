@@ -67,20 +67,20 @@
                 tools:visibility="invisible" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
                 android:id="@+id/tv_profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/activity_margin"
                 android:ellipsize="marquee"
-                android:fontFamily="monospace"
                 android:gravity="center"
                 android:maxLines="2"
                 android:scrollHorizontally="true"
-                android:text="Artem\nBazaleev"
                 android:textAllCaps="true"
                 android:textColor="@color/primary_text"
                 android:textSize="24sp"
+                tools:text="Artem bazaleev"
                 tools:visibility="visible" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -88,7 +88,7 @@
                 android:layout_width="@dimen/default_expanded_image_size"
                 android:layout_height="@dimen/default_expanded_image_size"
                 android:layout_gravity="bottom|center_horizontal"
-                android:src="@drawable/ic_pizza" />
+                tools:src="@drawable/ic_pizza" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

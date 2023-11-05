@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.databinding.FragmentAccountBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
@@ -41,10 +43,6 @@ class AccountFragment : Fragment() {
 
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        Glide.with(root)
-            .load("https://lh3.googleusercontent.com/a/ACg8ocL13IiQv0hUt6yJvuxUSVx0sLBlch7B3IiJ0ZPyTXQh=s96-c")
-            .circleCrop()
-            .into(binding.imgbAvatarWrap)
 
         return root
     }
@@ -58,6 +56,17 @@ class AccountFragment : Fragment() {
             }
         }
         toolbarController.initToolbarAnimation(binding)
+        observeState()
+    }
+
+    private fun observeState() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                accountViewModel.state.collect {
+                    toolbarController.renderProfile(it.ownProfile, binding)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

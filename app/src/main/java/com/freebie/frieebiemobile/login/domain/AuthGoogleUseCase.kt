@@ -1,6 +1,7 @@
 package com.freebie.frieebiemobile.login.domain
 
 import com.freebie.frieebiemobile.login.data.repository.AuthRepository
+import com.freebie.frieebiemobile.ui.account.domain.ProfileModel
 import com.google.android.gms.auth.api.identity.SignInCredential
 import java.lang.IllegalStateException
 import javax.inject.Inject
