@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_coupon_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/default_top_margin"
+    android:layout_marginEnd="@dimen/default_side_margin_s"
+    android:layout_marginBottom="@dimen/default_top_margin"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:minWidth="50dp"
+        android:layout_marginStart="@dimen/default_side_margin_s"
+        android:layout_marginTop="@dimen/default_top_margin"
+        android:layout_marginEnd="@dimen/default_side_margin_s"
+        android:layout_marginBottom="@dimen/default_bottom_margin"
+        android:gravity="center"
+        android:textSize="16sp"
+        tools:text="@string/all" />
+
+</androidx.cardview.widget.CardView>

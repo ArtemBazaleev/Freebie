@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_action_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_side_margin"
+    android:layout_marginTop="@dimen/default_top_margin"
+    android:layout_marginEnd="@dimen/default_side_margin"
+    android:backgroundTint="@color/regular_card_bg"
+    android:drawablePadding="@dimen/default_side_margin_s"
+    android:gravity="center"
+    android:textAllCaps="false"
+    android:textColor="@color/primary_text"
+    android:textSize="16sp"
+    tools:text="Get coupon" />

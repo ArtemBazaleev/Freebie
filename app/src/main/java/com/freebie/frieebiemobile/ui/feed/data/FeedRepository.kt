@@ -29,7 +29,9 @@ class FeedRepositoryImpl @Inject constructor(
                             avatar = coupon.imageUrl,
                             name = coupon.name ?: "",
                             description = coupon.description ?: "",
-                            discount = coupon.discount
+                            discount = coupon.discount,
+                            priceWithoutDiscount = coupon.priceWithoutDiscount,
+                            priceWithDiscount = coupon.priceWithDiscount
                         )
                     },
                     booklet = discount.bookletsList.map { booklet ->

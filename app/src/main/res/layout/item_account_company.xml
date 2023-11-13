@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/coupon_radius"
+    android:layout_marginStart="@dimen/default_side_margin"
+    android:layout_marginTop="@dimen/default_top_margin"
+    android:layout_marginBottom="@dimen/default_bottom_margin"
+    android:layout_marginEnd="@dimen/default_side_margin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/company_avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/default_side_margin"
+            android:layout_marginTop="@dimen/default_top_margin"
+            android:layout_marginBottom="@dimen/default_bottom_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/shimmer_color" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/company_name"
+            style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_side_margin"
+            android:layout_marginEnd="@dimen/default_side_margin"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/primary_text"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/company_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/company_avatar"
+            app:layout_constraintTop_toTopOf="@+id/company_avatar"
+            tools:text="Company name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

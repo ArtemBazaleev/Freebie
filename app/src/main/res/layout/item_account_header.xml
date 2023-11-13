@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_header"
+    style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_side_margin"
+    android:layout_marginTop="@dimen/default_top_margin_xl"
+    android:layout_marginEnd="@dimen/default_side_margin"
+    android:textColor="@color/primary_text"
+    android:textSize="22sp"
+    tools:text="@string/my_coupons" />

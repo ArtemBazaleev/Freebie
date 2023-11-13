@@ -33,7 +33,7 @@
                 android:gravity="start|center"
                 android:text="@string/categories"
                 android:textColor="@color/primary_text"
-                android:textSize="24sp" />
+                android:textSize="26sp" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

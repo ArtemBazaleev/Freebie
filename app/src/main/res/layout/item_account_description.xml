@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/accont_placeholder"
+    style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_side_margin"
+    android:layout_marginTop="@dimen/default_top_margin"
+    android:gravity="start"
+    android:textColor="@color/secondary_text"
+    android:textSize="16sp"
+    tools:text="You don't have coupons" />

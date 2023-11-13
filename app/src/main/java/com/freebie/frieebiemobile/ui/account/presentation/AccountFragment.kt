@@ -9,24 +9,24 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.databinding.FragmentAccountBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
+import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountAdapter
+import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountClickListener
+import com.freebie.frieebiemobile.ui.account.presentation.model.AccountActionButtonUIModel
+import com.freebie.frieebiemobile.ui.account.presentation.model.ButtonAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AccountFragment : Fragment() {
+class AccountFragment : Fragment(), AccountClickListener{
 
     private var _binding: FragmentAccountBinding? = null
 
     @Inject
     lateinit var googleAuth: GoogleAuth
-
-    @Inject
-    lateinit var toolbarController: AccountToolbarController
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -34,6 +34,7 @@ class AccountFragment : Fragment() {
 
     private val accountViewModel by viewModels<AccountViewModel>()
     private var openOneTapAuthJob: Job? = null
+    private var accountAdapter: AccountAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,27 +44,47 @@ class AccountFragment : Fragment() {
 
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        _binding?.accountRefreshLayout?.isRefreshing = true
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.googleSignIn.setOnClickListener {//todo throtled
-            if (openOneTapAuthJob?.isActive == true) return@setOnClickListener
-            openOneTapAuthJob = lifecycleScope.launch {
-                googleAuth.requestAuth(requireActivity())
-            }
-        }
-        toolbarController.initToolbarAnimation(binding)
+        initAdapter()
         observeState()
+        initView()
+    }
+
+    private fun initView() {
+        binding.accountRefreshLayout.setOnRefreshListener {
+            accountViewModel.refresh()
+        }
+    }
+
+    override fun actionButtonClick(model: AccountActionButtonUIModel) {
+        when (model.buttonAction) {
+            ButtonAction.GoogleSignIn -> {
+                if (openOneTapAuthJob?.isActive == true) return
+                openOneTapAuthJob = lifecycleScope.launch {
+                    googleAuth.requestAuth(requireActivity())
+                }
+            }
+            null -> TODO()
+        }
+
+    }
+
+    private fun initAdapter() {
+        accountAdapter = AccountAdapter(this)
+        binding.accontRecycler.adapter = accountAdapter
     }
 
     private fun observeState() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 accountViewModel.state.collect {
-                    toolbarController.renderProfile(it.ownProfile, binding)
+                    binding.accountRefreshLayout.isRefreshing = it.isRefreshing
+                    accountAdapter?.submitList(it.accountUI)
                 }
             }
         }
@@ -71,6 +92,7 @@ class AccountFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.accontRecycler.adapter = null
         _binding = null
     }
 }

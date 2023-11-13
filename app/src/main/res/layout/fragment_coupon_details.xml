@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/secondary_text" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/coupon_header"
+            style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Super duper coupon just two days left"
+            android:textColor="@color/primary_text"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/default_side_margin"
+            android:layout_marginEnd="@dimen/default_side_margin"
+            android:layout_marginTop="@dimen/default_top_margin_xl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+            android:id="@+id/original_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50$"
+            android:layout_marginLeft="@dimen/default_side_margin"
+            android:textColor="@color/secondary_text"
+            android:layout_marginTop="@dimen/default_top_margin"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/coupon_header" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/discount_price"
+            style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_top_margin"
+            android:layout_marginLeft="@dimen/default_side_margin"
+            android:text="50$"
+            android:textColor="@color/secondary_text"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/original_price"
+            app:layout_constraintTop_toBottomOf="@+id/coupon_header" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>

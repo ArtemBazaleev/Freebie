@@ -10,16 +10,16 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:colorBackground"
         app:layout_behavior=".ui.widget.FlingBehavior"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="?android:colorBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/top_head_height"
+            android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <androidx.appcompat.widget.Toolbar
@@ -41,79 +41,33 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="Account"
-                android:textAllCaps="true"
                 android:textColor="@color/primary_text"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:visibility="invisible"
+                android:textSize="26sp"
                 app:layout_collapseMode="pin"
                 tools:visibility="visible" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_workaround"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="center_horizontal"
-                android:ellipsize="end"
-                android:gravity="start|center"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Stas molodec"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:visibility="invisible"
-                app:layout_collapseMode="pin"
-                tools:visibility="invisible" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
-                android:id="@+id/tv_profile_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/activity_margin"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:maxLines="2"
-                android:scrollHorizontally="true"
-                android:textAllCaps="true"
-                android:textColor="@color/primary_text"
-                android:textSize="24sp"
-                tools:text="Artem bazaleev"
-                tools:visibility="visible" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imgb_avatar_wrap"
-                android:layout_width="@dimen/default_expanded_image_size"
-                android:layout_height="@dimen/default_expanded_image_size"
-                android:layout_gravity="bottom|center_horizontal"
-                tools:src="@drawable/ic_pizza" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/refresh_layout"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/account_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginTop="?attr/actionBarSize"
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
 
-        <Button
-            android:id="@+id/google_sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Button"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/accont_recycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_notifications" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

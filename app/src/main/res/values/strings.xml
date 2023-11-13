@@ -12,4 +12,10 @@
     <string name="all_discounts">All discounts</string>
     <string name="categories">Categories</string>
     <string name="auth_client_id">552671974636-78mhcqclttdf0r77ln9bn67rqmifq952.apps.googleusercontent.com</string>
+    <string name="all">All</string>
+    <string name="active">Active</string>
+    <string name="expired">Expired</string>
+    <string name="used">Used</string>
+    <string name="my_coupons">My coupons</string>
+    <string name="unrecognized">Unrecognized</string>
 </resources>

@@ -29,7 +29,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lottie_animation"
-        tools:text="Oops something went wrong" />
+        tools:text="Oops something went wrong"
+        tools:visibility="visible"
+        tools:textColor="@color/black"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

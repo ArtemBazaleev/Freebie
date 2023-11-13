@@ -17,7 +17,9 @@ data class CouponModel(
     val avatar: String,
     val name: String?,
     val description: String?,
-    val discount: String?
+    val discount: String?,
+    val priceWithDiscount: Double,
+    val priceWithoutDiscount: Double
 )
 
 data class BookletModel(

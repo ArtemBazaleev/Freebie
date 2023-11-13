@@ -24,9 +24,6 @@ interface BindVmModule {
     fun bindRepo(impl: AuthRepositoryImpl): AuthRepository
 
     @Binds
-    fun bindsStorage(impl: TokenStorageImpl): TokenStorage
-
-    @Binds
     fun bindApi(impl: AuthApiImpl): AuthApi
 
     @Binds
@@ -42,4 +39,7 @@ interface BindVmModule {
 interface BindSingletonModule {
     @Binds
     fun bindGoogleAuth(impl: GoogleAuthImpl): GoogleAuth
+
+    @Binds
+    fun bindsStorage(impl: TokenStorageImpl): TokenStorage
 }

@@ -9,6 +9,8 @@ const val PLATFORM = "Platform"
 const val APPLICATION_PROTOBUF = "application/x-protobuf"
 const val DEFAULT_LOCALE = "eu"
 const val DEFAULT_PLATFORM = "android"
+const val AUTHORIZATION = "Authorization"
+const val BEARER = "Bearer "
 
 //base url
 const val BASE_URL = "http://freebie-app.com/"
