@@ -19,6 +19,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -48,5 +49,6 @@ interface AccountDataBind {
 @InstallIn(SingletonComponent::class)
 interface AccountDBModule {
     @Binds
+    @Singleton
     fun bindDao(impl: UserProfileDaoProviderImpl): UserProfileDaoProvider
 }

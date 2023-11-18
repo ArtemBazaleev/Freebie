@@ -1,6 +1,7 @@
 package com.freebie.frieebiemobile.ui.account.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.freebie.frieebiemobile.login.GoogleAuth
 import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountAdapter
 import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountClickListener
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountActionButtonUIModel
+import com.freebie.frieebiemobile.ui.account.presentation.model.AccountState
 import com.freebie.frieebiemobile.ui.account.presentation.model.ButtonAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -83,10 +85,32 @@ class AccountFragment : Fragment(), AccountClickListener{
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 accountViewModel.state.collect {
-                    binding.accountRefreshLayout.isRefreshing = it.isRefreshing
+                    Log.d("observeState","observeState $it")
                     accountAdapter?.submitList(it.accountUI)
+                    handlePlaceHolder(it)
+                    handleShimmer(it)
                 }
             }
+        }
+    }
+
+    private fun handleShimmer(state: AccountState) {
+        binding.accountRefreshLayout.isRefreshing = state.isRefreshing
+        if (state.accountUI.isNotEmpty() || !state.isRefreshing) {
+            binding.shimmer.shimmerLayout.stopShimmer()
+            binding.shimmer.root.visibility = View.GONE
+        } else {
+            binding.shimmer.shimmerLayout.startShimmer()
+            binding.shimmer.root.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handlePlaceHolder(state: AccountState) {
+        if (state.accountUI.isNotEmpty() || state.placeholder?.state == null || state.isRefreshing) {
+            binding.placeholder.visibility = View.GONE
+        } else {
+            binding.placeholder.visibility = View.VISIBLE
+            binding.placeholder.setState(state.placeholder.state, state.placeholder.needToAnimate)
         }
     }
 

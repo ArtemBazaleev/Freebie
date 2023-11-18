@@ -19,6 +19,9 @@ interface ProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg users: ProfileEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(user: ProfileEntity) : Long
+
 
     @Delete
     suspend fun delete(user: ProfileEntity)
