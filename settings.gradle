@@ -13,10 +13,7 @@ dependencyResolutionManagement {
         maven {
             name = "freebie-maven-repo"
             url = uri("https://maven.pkg.github.com/KirillAchramiomok/freebie-proto")
-            credentials {
-                username = "KirillAchramiomok"
-                password = "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"
-            }
+
         }
     }
 }
