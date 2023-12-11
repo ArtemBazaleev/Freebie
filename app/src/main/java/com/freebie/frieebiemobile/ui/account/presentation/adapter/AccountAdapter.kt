@@ -1,5 +1,6 @@
 package com.freebie.frieebiemobile.ui.account.presentation.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -27,6 +28,7 @@ class AccountAdapter(
 
     private val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<AccountUIModel>() {
         override fun areItemsTheSame(oldItem: AccountUIModel, newItem: AccountUIModel): Boolean {
+            Log.d("AsyncListDiffer", "oldItem = $oldItem, newItem = $newItem")
             return oldItem == newItem
         }
 
@@ -62,7 +64,8 @@ class AccountAdapter(
             }
             AccountType.COUPON_GROUPS.intValue -> {
                 AccountCouponsGroupVH(
-                    inflater.inflate(R.layout.item_account_coupon_groups, parent, false)
+                    inflater.inflate(R.layout.item_account_coupon_groups, parent, false),
+                    accountClickListener
                 )
             }
             AccountType.COUPONS.intValue -> {

@@ -11,5 +11,6 @@ enum class StatusCoupon(val intValue: Int){
     ACTIVE(0),
     USED(1),
     EXPIRED(2),
-    UNRECOGNIZED(3)
+    UNRECOGNIZED(3),
+    RESERVED(4)
 }

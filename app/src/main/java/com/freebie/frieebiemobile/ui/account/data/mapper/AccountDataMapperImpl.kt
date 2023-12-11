@@ -91,6 +91,7 @@ class AccountDataMapperImpl @Inject constructor() {
             CouponModelProtos.Status.USED -> StatusCoupon.USED
             CouponModelProtos.Status.EXPIRED -> StatusCoupon.EXPIRED
             CouponModelProtos.Status.UNRECOGNIZED -> StatusCoupon.UNRECOGNIZED
+            CouponModelProtos.Status.RESERVED -> StatusCoupon.RESERVED
         }
     }
 }

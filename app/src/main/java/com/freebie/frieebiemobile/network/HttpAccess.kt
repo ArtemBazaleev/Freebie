@@ -15,8 +15,8 @@ interface HttpAccess {
     @Throws(IOException::class)
     suspend fun httpRequest(
         requestUrlSegment: String,
-        headers: Map<String, String>,
-        body: ByteArray?,
+        headers: Map<String, String> = emptyMap(),
+        body: ByteArray? = null,
         method: Method
     ): HttpResponse
 }

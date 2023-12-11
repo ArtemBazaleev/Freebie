@@ -5,7 +5,7 @@
     <color name="selected_card_bg">#C8C8C8</color>
     <color name="regular_card_bg">#FFFFFFFF</color>
     <color name="color_statusbar">#FAFAFA</color>
-    <color name="color_label">#f47847</color>
+    <color name="color_label">#db5357</color>
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

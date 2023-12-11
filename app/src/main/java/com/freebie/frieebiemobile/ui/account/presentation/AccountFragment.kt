@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.freebie.frieebiemobile.databinding.FragmentAccountBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
 import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountAdapter
@@ -17,6 +18,9 @@ import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountClickLi
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountActionButtonUIModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountState
 import com.freebie.frieebiemobile.ui.account.presentation.model.ButtonAction
+import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupUiModel
+import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
+import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -71,14 +75,19 @@ class AccountFragment : Fragment(), AccountClickListener{
                     googleAuth.requestAuth(requireActivity())
                 }
             }
-            null -> TODO()
+            null -> CouponDetailsFragment.show(childFragmentManager, CouponTransitUIData("1"))
         }
 
+    }
+
+    override fun couponGroupClick(group: CouponGroupUiModel) {
+        accountViewModel.onCouponGroupClicked(group)
     }
 
     private fun initAdapter() {
         accountAdapter = AccountAdapter(this)
         binding.accontRecycler.adapter = accountAdapter
+        binding.accontRecycler.itemAnimator = null
     }
 
     private fun observeState() {
@@ -95,6 +104,7 @@ class AccountFragment : Fragment(), AccountClickListener{
     }
 
     private fun handleShimmer(state: AccountState) {
+        Log.d("AccountViewModel", "emitAccountState0 = $state")
         binding.accountRefreshLayout.isRefreshing = state.isRefreshing
         if (state.accountUI.isNotEmpty() || !state.isRefreshing) {
             binding.shimmer.shimmerLayout.stopShimmer()

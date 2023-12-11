@@ -2,7 +2,7 @@ package com.freebie.frieebiemobile.ui.account.presentation.model
 
 import androidx.annotation.StringRes
 
-class CouponGroupsUIModel(
+data class CouponGroupsUIModel(
     val groups: List<CouponGroupUiModel>
 ): AccountUIModel {
     override fun getItemType() = AccountType.COUPON_GROUPS

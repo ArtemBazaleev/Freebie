@@ -1,5 +1,6 @@
 package com.freebie.frieebiemobile.ui.account.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.login.domain.AuthStatus
@@ -13,16 +14,19 @@ import com.freebie.frieebiemobile.ui.account.domain.model.AccountInfoModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountState
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountUIModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupUiModel
+import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupsUIModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.UserUiModel
 import com.freebie.frieebiemobile.ui.feed.models.PlaceHolderInfo
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import kotlin.random.Random
@@ -37,6 +41,10 @@ class AccountViewModel @Inject constructor(
 
     private val isPlaceHolderAnimationShown = AtomicBoolean(false)
     private val _state = MutableStateFlow(AccountState(null, emptyList()))
+
+    @Volatile
+    private var accountInfo: AccountInfoModel? = null
+
     val state: Flow<AccountState>
         get() = _state
 
@@ -67,6 +75,7 @@ class AccountViewModel @Inject constructor(
     private suspend fun handleAccountResult(result: Result<AccountInfoModel>) {
         try {
             val accountInfo = result.getOrThrow()
+            this.accountInfo = accountInfo
             val sections = mapper.mapAccountInfo(accountInfo, isAuthorized = true)
             emitAccountState(accountUI = sections, isRefreshing = false)
         } catch (e: NoInternetException) {
@@ -89,6 +98,7 @@ class AccountViewModel @Inject constructor(
     }
 
     private suspend fun emitUnAuthorizedState() {
+        delay(DELAY_UPDATE_REFRESH)
         emitAccountState(
             accountUI = mapper.mapAccountInfo(
                 AccountInfoModel(
@@ -113,13 +123,16 @@ class AccountViewModel @Inject constructor(
             accountUI = accountUI ?: _state.value.accountUI,
             isRefreshing = isRefreshing ?: _state.value.isRefreshing,
             placeholder = placeholder ?: _state.value.placeholder
-        )
+        ).apply {
+            Log.d("AccountViewModel", "emitAccountState = $this")
+        }
     )
 
 
     private fun observeOwnUserProfile() {
         viewModelScope.launch {
             ownUserProfileUseCase.getOwnUserProfileFlow().collect { profile ->
+                Log.d("observeOwnUserProfile", "profile = $profile")
                 if (_state.value.ownProfile == null) {
                     requestAccountData()
                 }
@@ -135,14 +148,15 @@ class AccountViewModel @Inject constructor(
     }
 
     fun onCouponGroupClicked(model: CouponGroupUiModel) {
-//        val newGroup = mutableListOf<CouponGroupUiModel>()
-//        _state.value.couponTypes.forEach { group ->
-//            if (group.groupId == model.groupId) {
-//                newGroup.add(group.copy(isActive = true))
-//            } else {
-//                newGroup.add(group.copy(isActive = false))
-//            }
-//        }
-//        _state.tryEmit(_state.value.copy(couponTypes = newGroup))
+        Log.d("AccountViewModel", "model = $model")
+        accountInfo?.let { accountInfoModel ->
+            val newList = mapper.mapAccountInfo(accountInfoModel, true, model.groupId)
+            viewModelScope.launch { emitAccountState(accountUI = newList) }
+        }
+
+    }
+
+    companion object {
+        private const val DELAY_UPDATE_REFRESH = 100L
     }
 }

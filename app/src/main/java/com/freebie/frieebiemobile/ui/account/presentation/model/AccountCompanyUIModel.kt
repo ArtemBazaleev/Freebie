@@ -1,6 +1,6 @@
 package com.freebie.frieebiemobile.ui.account.presentation.model
 
-class AccountCompanyUIModel(
+data class AccountCompanyUIModel(
     val companyId: String,
     val companyName: String,
     val companyAvatar: String

@@ -21,39 +21,48 @@ class AccountUIMapper @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    fun mapAccountInfo(accountInfo: AccountInfoModel, isAuthorized: Boolean): List<AccountUIModel> {
+    fun mapAccountInfo(
+        accountInfo: AccountInfoModel,
+        isAuthorized: Boolean,
+        selectedGroupId: Int? = null
+    ): List<AccountUIModel> {
         val result = mutableListOf<AccountUIModel>()
 
         result.add(AccountHeaderUIModel("My coupons")) //todo
         if (accountInfo.coupons.isEmpty()) {
             result.addAll(getEmptyCouponsSection())
         } else {
-            val couponGroups = accountInfo.coupons.map { group ->
+            val couponGroups = accountInfo.coupons.mapIndexed { index, group ->
                 CouponGroupUiModel(
-                    groupId = group.statusCoupon.intValue,
-                    groupTitle = when (group.statusCoupon) {
+                    groupId = group.statusCoupon.intValue, groupTitle = when (group.statusCoupon) {
                         StatusCoupon.ACTIVE -> R.string.active
                         StatusCoupon.USED -> R.string.used
                         StatusCoupon.EXPIRED -> R.string.expired
                         StatusCoupon.UNRECOGNIZED -> R.string.unrecognized
-                    },
-                    isActive = false
+                        StatusCoupon.RESERVED -> R.string.reserved
+                    }, isActive = if (selectedGroupId == null) {
+                        index == 0
+                    } else {
+                        selectedGroupId == group.statusCoupon.intValue
+                    }
                 )
             }
             result.add(CouponGroupsUIModel(couponGroups))
-            result.add(
-                AccountCouponsUIModel(
-                    coupons = accountInfo.coupons.first().coupons.map { couponModel ->  //todo
-                        CouponUI(
-                            id = couponModel.id,
-                            avatar = couponModel.avatar,
-                            name = couponModel.name ?: "",
-                            description = couponModel.description ?: "",
-                            discount = couponModel.discount ?: ""
-                        )
-                    }
+            val coupons = if (selectedGroupId == null) {
+                accountInfo.coupons.first()
+            } else {
+                accountInfo.coupons.firstOrNull { it.statusCoupon.intValue == selectedGroupId}
+            }?.coupons ?: emptyList()
+
+            result.add(AccountCouponsUIModel(coupons = coupons.map { couponModel ->
+                CouponUI(
+                    id = couponModel.id,
+                    avatar = couponModel.avatar,
+                    name = couponModel.name ?: "",
+                    description = couponModel.description ?: "",
+                    discount = couponModel.discount ?: ""
                 )
-            )
+            }))
         }
 
         result.add(AccountHeaderUIModel("My companies"))//todo
@@ -100,8 +109,7 @@ class AccountUIMapper @Inject constructor(
             add(
                 AccountActionButtonUIModel(
                     "Continue with google",//todo
-                    R.drawable.ic_google,
-                    ButtonAction.GoogleSignIn
+                    R.drawable.ic_google, ButtonAction.GoogleSignIn
                 )
             )
         }

@@ -11,7 +11,11 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.freebie.frieebiemobile.databinding.FragmentFeedBinding
+import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
+import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
 import com.freebie.frieebiemobile.ui.feed.adapter.FeedAdapter
+import com.freebie.frieebiemobile.ui.feed.adapter.FeedClickListener
+import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.models.FeedItem
 import com.freebie.frieebiemobile.ui.feed.models.FeedShimmer
 import com.freebie.frieebiemobile.ui.feed.models.FeedState
@@ -22,7 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class FeedFragment : Fragment() {
+class FeedFragment : Fragment(), FeedClickListener {
 
     private var _binding: FragmentFeedBinding? = null
 
@@ -63,7 +67,7 @@ class FeedFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        feedAdapter = FeedAdapter()
+        feedAdapter = FeedAdapter(this)
         binding.rvFeed.adapter = feedAdapter
         binding.rvFeed.addOnScrollListener(RecyclerPaginationUtil(
             binding.rvFeed.layoutManager as LinearLayoutManager,
@@ -97,5 +101,9 @@ class FeedFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         feedAdapter = null
+    }
+
+    override fun onCouponClicked(couponUI: CouponUI) {
+        CouponDetailsFragment.show(childFragmentManager, CouponTransitUIData(couponUI.id))
     }
 }

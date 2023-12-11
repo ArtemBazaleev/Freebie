@@ -37,9 +37,11 @@ class HeadersInterceptor @Inject constructor(
             .addHeader(LOCALE, locale)
 
         runBlocking {
-            val token = tokenStorage.getAccessToken()
-            token?.let { tokenNonNull ->
-                newRequest.addHeader(AUTHORIZATION, BEARER + tokenNonNull)
+            runCatching {
+                val token = tokenStorage.getAccessToken()
+                token?.let { tokenNonNull ->
+                    newRequest.addHeader(AUTHORIZATION, BEARER + tokenNonNull)
+                }
             }
         }
         return chain.proceed(newRequest.build())

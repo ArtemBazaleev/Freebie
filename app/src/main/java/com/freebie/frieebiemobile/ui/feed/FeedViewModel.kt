@@ -2,11 +2,13 @@ package com.freebie.frieebiemobile.ui.feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.freebie.frieebiemobile.ui.feed.adapter.FeedClickListener
 import com.freebie.frieebiemobile.ui.feed.domain.EmptyFeed
 import com.freebie.frieebiemobile.ui.feed.domain.ErrorWhileLoadingFirstPage
 import com.freebie.frieebiemobile.ui.feed.domain.FeedFetcher
 import com.freebie.frieebiemobile.ui.feed.domain.FetcherEvents
 import com.freebie.frieebiemobile.ui.feed.domain.NoInternet
+import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.models.FeedItem
 import com.freebie.frieebiemobile.ui.feed.models.FeedState
 import com.freebie.frieebiemobile.ui.feed.models.PlaceHolderInfo
@@ -107,5 +109,4 @@ class FeedViewModel @Inject constructor(
             feedFetcher.refresh()
         }
     }
-
 }

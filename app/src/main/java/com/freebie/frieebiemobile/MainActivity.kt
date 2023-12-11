@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity(), NavHolder {
             true
         }
         navView.setupWithNavController(navController)
+        viewModel
     }
 
     override fun getNavController(): NavController {

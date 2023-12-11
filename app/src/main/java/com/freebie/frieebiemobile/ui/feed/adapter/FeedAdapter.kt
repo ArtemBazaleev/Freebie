@@ -15,9 +15,10 @@ import com.freebie.frieebiemobile.ui.feed.viewholder.CompanyHeaderViewHolder
 import com.freebie.frieebiemobile.ui.feed.viewholder.CouponsViewHolder
 import com.freebie.frieebiemobile.ui.feed.viewholder.FeedShimmerViewHolder
 import com.freebie.frieebiemobile.ui.feed.viewholder.OffersViewHolder
-import java.lang.IllegalArgumentException
 
-class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FeedAdapter(
+    private val clickListener: FeedClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<FeedItem>() {
         override fun areItemsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
@@ -41,6 +42,7 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             FeedItemType.COUPON.intValue -> CouponsViewHolder(
+                clickListener,
                 inflater.inflate(
                     R.layout.item_coupons,
                     parent,
@@ -55,6 +57,7 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     false
                 )
             )
+
             FeedItemType.OFFER.intValue -> OffersViewHolder(
                 inflater.inflate(
                     R.layout.item_offers,
@@ -70,13 +73,14 @@ class FeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     false
                 )
             )
+
             else -> throw IllegalArgumentException("item type for feed is not supported")
         }
 
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder) {
+        when (holder) {
             is CompanyHeaderViewHolder -> holder.onBind(differ.currentList[position] as CompanyHeaderItem)
             is CouponsViewHolder -> holder.bind(differ.currentList[position] as CouponsItem)
             is OffersViewHolder -> holder.bind(differ.currentList[position] as OffersItem)

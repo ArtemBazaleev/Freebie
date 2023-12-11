@@ -7,7 +7,9 @@ import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.viewholder.CouponViewHolder
 
-class CouponsAdapter : RecyclerView.Adapter<CouponViewHolder>() {
+class CouponsAdapter(
+    private val clickListener: (CouponUI) -> Unit
+) : RecyclerView.Adapter<CouponViewHolder>() {
 
     private val mCurrentList: MutableList<CouponUI> = mutableListOf()
 
@@ -19,6 +21,7 @@ class CouponsAdapter : RecyclerView.Adapter<CouponViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CouponViewHolder {
         return CouponViewHolder(
+            clickListener,
             LayoutInflater.from(parent.context).inflate(R.layout.item_coupon, parent, false)
         )
     }
