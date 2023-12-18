@@ -60,7 +60,9 @@ class AccountUIMapper @Inject constructor(
                     avatar = couponModel.avatar,
                     name = couponModel.name ?: "",
                     description = couponModel.description ?: "",
-                    discount = couponModel.discount ?: ""
+                    discount = couponModel.discount ?: "",
+                    priceWithDiscount = couponModel.priceWithDiscount,
+                    price = couponModel.priceWithoutDiscount
                 )
             }))
         }

@@ -1,7 +1,6 @@
 package com.freebie.frieebiemobile.ui.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,8 @@ import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIDa
 import com.freebie.frieebiemobile.ui.feed.adapter.FeedAdapter
 import com.freebie.frieebiemobile.ui.feed.adapter.FeedClickListener
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
-import com.freebie.frieebiemobile.ui.feed.models.FeedItem
 import com.freebie.frieebiemobile.ui.feed.models.FeedShimmer
 import com.freebie.frieebiemobile.ui.feed.models.FeedState
-import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
 import com.freebie.frieebiemobile.ui.utils.RecyclerPaginationUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -69,10 +66,12 @@ class FeedFragment : Fragment(), FeedClickListener {
     private fun initAdapter() {
         feedAdapter = FeedAdapter(this)
         binding.rvFeed.adapter = feedAdapter
-        binding.rvFeed.addOnScrollListener(RecyclerPaginationUtil(
-            binding.rvFeed.layoutManager as LinearLayoutManager,
-            feedViewModel
-        ))
+        binding.rvFeed.addOnScrollListener(
+            RecyclerPaginationUtil(
+                binding.rvFeed.layoutManager as LinearLayoutManager,
+                feedViewModel
+            )
+        )
     }
 
     private fun observeData() {
@@ -86,7 +85,10 @@ class FeedFragment : Fragment(), FeedClickListener {
         feedAdapter?.submitList(state.feedList)
         if (isValidForPlaceholder(state)) {
             binding.placeholder.visibility = View.VISIBLE
-            binding.placeholder.setState(state.placeHolderInfo.state!!, state.placeHolderInfo.needToAnimate)
+            binding.placeholder.setState(
+                state.placeHolderInfo.state!!,
+                state.placeHolderInfo.needToAnimate
+            )
         } else {
             binding.placeholder.visibility = View.GONE
         }
@@ -104,6 +106,16 @@ class FeedFragment : Fragment(), FeedClickListener {
     }
 
     override fun onCouponClicked(couponUI: CouponUI) {
-        CouponDetailsFragment.show(childFragmentManager, CouponTransitUIData(couponUI.id))
+        CouponDetailsFragment.show(
+            childFragmentManager,
+            CouponTransitUIData(
+                couponId = couponUI.id,
+                description = couponUI.description,
+                image = couponUI.avatar,
+                header = couponUI.name,
+                priceWithDiscount = couponUI.priceWithDiscount,
+                priceWithoutDiscount = couponUI.price
+            )
+        )
     }
 }

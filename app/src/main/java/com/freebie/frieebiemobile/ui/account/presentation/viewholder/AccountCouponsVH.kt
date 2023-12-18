@@ -2,14 +2,20 @@ package com.freebie.frieebiemobile.ui.account.presentation.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.freebie.frieebiemobile.R
+import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountClickListener
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountCouponsUIModel
 import com.freebie.frieebiemobile.ui.feed.adapter.CouponsAdapter
 
-class AccountCouponsVH(val itemView: View): RecyclerView.ViewHolder(itemView) {
+class AccountCouponsVH(
+    val itemView: View,
+    private val clickListener: AccountClickListener
+) : RecyclerView.ViewHolder(itemView) {
 
-    private val adapter = CouponsAdapter({  })
+    private val adapter = CouponsAdapter {
+        clickListener.onCouponClicked(it)
+    }
+
     private val rvCoupons = itemView.findViewById<RecyclerView>(R.id.rv_coupons)
 
     init {

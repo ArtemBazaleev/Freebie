@@ -24,7 +24,9 @@ class CompanyListMapper @Inject constructor() {
                     avatar = coupon.avatar,
                     name = coupon.name ?: "",
                     description = coupon.description ?: "",
-                    discount = coupon.discount ?: ""
+                    discount = coupon.discount ?: "",
+                    price = coupon.priceWithoutDiscount,
+                    priceWithDiscount = coupon.priceWithoutDiscount
                 )
             }
             if (coupons.isNotEmpty()) feedItems.add(CouponsItem(it.id, coupons))

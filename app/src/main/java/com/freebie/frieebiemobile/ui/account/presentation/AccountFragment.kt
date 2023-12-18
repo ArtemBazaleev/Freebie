@@ -21,6 +21,7 @@ import com.freebie.frieebiemobile.ui.account.presentation.model.ButtonAction
 import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupUiModel
 import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
 import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
+import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -78,13 +79,31 @@ class AccountFragment : Fragment(), AccountClickListener{
             ButtonAction.Logout -> {
                 accountViewModel.logout()
             }
-            null -> CouponDetailsFragment.show(childFragmentManager, CouponTransitUIData("1"))
+            else -> {}
         }
 
     }
 
+    private fun showCouponDetails(transitUIData: CouponTransitUIData) {
+        CouponDetailsFragment.show(childFragmentManager, transitUIData)
+    }
+
     override fun couponGroupClick(group: CouponGroupUiModel) {
         accountViewModel.onCouponGroupClicked(group)
+    }
+
+    override fun onCouponClicked(coupon: CouponUI) {
+        showCouponDetails(
+            CouponTransitUIData(
+                couponId = coupon.id,
+                description = coupon.description,
+                image = coupon.avatar,
+                header = coupon.name,
+                priceWithDiscount = coupon.priceWithDiscount,
+                priceWithoutDiscount = coupon.price
+
+            )
+        )
     }
 
     private fun initAdapter() {

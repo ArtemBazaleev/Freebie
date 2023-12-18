@@ -5,5 +5,7 @@ data class CouponUI(
     val avatar: String,
     val name: String,
     val description: String,
-    val discount: String
+    val discount: String,
+    val price: Double,
+    val priceWithDiscount: Double
 )

@@ -70,7 +70,8 @@ class AccountAdapter(
             }
             AccountType.COUPONS.intValue -> {
                 AccountCouponsVH(
-                    inflater.inflate(R.layout.item_coupons, parent, false)
+                    inflater.inflate(R.layout.item_coupons, parent, false),
+                    clickListener = accountClickListener
                 )
             }
             AccountType.COMPANY.intValue -> {
