@@ -26,10 +26,8 @@ class AccountButtonVH(
     fun bind(model: AccountActionButtonUIModel) {
         this.model = model
         button.text = model.text
-        model.drawableStart?.let {
-            button.setCompoundDrawablesWithIntrinsicBounds(
-                ContextCompat.getDrawable(itemView.context, it), null, null, null
-            )
-        }
+        val drawableStart = if (model.drawableStart == null) null
+        else ContextCompat.getDrawable(itemView.context, model.drawableStart)
+        button.setCompoundDrawablesWithIntrinsicBounds(drawableStart, null, null, null)
     }
 }

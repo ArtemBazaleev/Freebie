@@ -84,6 +84,8 @@ class AccountUIMapper @Inject constructor(
 
         if (!isAuthorized) {
             result.addAll(getAuthSection())
+        } else {
+            result.addAll(getLogoutSection())
         }
         return result
     }
@@ -99,6 +101,18 @@ class AccountUIMapper @Inject constructor(
         return mutableListOf<AccountUIModel>().apply {
             add(AccountDescUIModel("Register company to add own coupons"))//todo
             add(AccountActionButtonUIModel("Register new company", null))//todo
+        }
+    }
+
+    private fun getLogoutSection(): List<AccountUIModel> {
+        return mutableListOf<AccountUIModel>().apply {
+            add(
+                AccountActionButtonUIModel(
+                    text = "Logout",//todo
+                    drawableStart = null,
+                    buttonAction = ButtonAction.Logout
+                )
+            )
         }
     }
 

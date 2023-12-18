@@ -24,19 +24,16 @@ class SocketIOClient @Inject constructor(
 
     private fun createSocket(token: String): Socket {
         val options = SocketOptionBuilder.builder()
-            //.setPort(8086)
             .setReconnectionAttempts(10)
             .setTimeout(10000)
             .setExtraHeaders(mutableMapOf(
                 "Authorization" to listOf(token)
-            ))
-            .build()
+            )).build()
         return IO.socket("http://freebie-app.com:8086", options)
     }
 
     override suspend fun initWebSocket(): Result<Boolean> = withContext(Dispatchers.IO) {
-        var token = tokenStorage.getAccessToken()
-        token = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxIiwiaXNzIjoiZnJlZWJpZS5hdXRoIiwiaWF0IjoxNzAyMzMyMDg0LCJleHAiOjE3MDI5MzY4ODR9.vhBNesFe1kW8ITBv87zJ1H236Ng-G43RLasvEOgmSydDNBfOjeFQzuVwaVTaSC8e2WX-zjZoJIvrYioaDIjbNs_0b7qZ8ucpIQVPeYgyXVvJABp_U052nCbAPs5avQidDlBGKePxoyp1VodXFkQ2zHp6FZwbQqamixGHLh4zEmkvnS6zNuYv3usDqvJLpJfXdYLDBFghouOcmfJLp2sQ2uAd3WPPrzEqSJucckpXyYT6wxHdhDxC_QmM6_fHNbbtLzAFeT9iVkYtxpZNnfAkVrekyISHSA0aa7e3Sdz8iefu3R-MAU5moIgJxs8bhVn_kLKyrvLCbtLdurgNgnwVoA"
+        val token = tokenStorage.getAccessToken()
         if (token != null) {
             Log.d("SocketIOClient", "createSocket token = $token")
             socket = createSocket(token)
@@ -55,10 +52,6 @@ class SocketIOClient @Inject constructor(
             Log.d("SocketIOClient", "Connection status = ${socket.connected()}")
             val jsonObject = JSONObject()
             jsonObject.put("subscribeTo", "coupon_purchase")
-//            val params = JSONObject()  // то что в комменте в случае когда реально нужно отправлять параметры а так без них работает
-//            params.put("1", "1")
-//            params.put("2", "2")
-//            jsonObject.put("params", params)
             socket.emit("subscribe", jsonObject)
         }
 

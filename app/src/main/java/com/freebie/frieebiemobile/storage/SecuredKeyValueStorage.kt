@@ -10,6 +10,7 @@ import javax.inject.Inject
 interface SecuredKeyValueStorage {
     suspend fun putString(key: String, value: String)
     suspend fun getString(key: String, defValue: String?): String?
+    suspend fun clear()
 }
 
 class SecuredKeyValueStorageImpl @Inject constructor(
@@ -25,7 +26,7 @@ class SecuredKeyValueStorageImpl @Inject constructor(
     private val sharedPreferences by lazy {
         EncryptedSharedPreferences.create(
             context,
-            "freebie-pref",
+            PREF,
             masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
@@ -42,6 +43,10 @@ class SecuredKeyValueStorageImpl @Inject constructor(
 
     override suspend fun getString(key: String, defValue: String?): String? {
         return sharedPreferences.getString(key, defValue)
+    }
+
+    override suspend fun clear() {
+        editor.clear()
     }
 
     companion object {

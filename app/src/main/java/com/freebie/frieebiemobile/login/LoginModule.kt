@@ -8,6 +8,8 @@ import com.freebie.frieebiemobile.login.domain.AuthGoogleUseCase
 import com.freebie.frieebiemobile.login.domain.AuthGoogleUseCaseImpl
 import com.freebie.frieebiemobile.login.domain.AuthStatusUseCase
 import com.freebie.frieebiemobile.login.domain.AuthStatusUseCaseImpl
+import com.freebie.frieebiemobile.login.domain.LogoutUseCase
+import com.freebie.frieebiemobile.login.domain.LogoutUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,6 +34,8 @@ interface BindVmModule {
     @Binds
     fun bindAuthStatusUseCase(impl: AuthStatusUseCaseImpl): AuthStatusUseCase
 
+    @Binds
+    fun bindLogoutUseCase(impl: LogoutUseCaseImpl): LogoutUseCase
 }
 
 @Module

@@ -6,6 +6,7 @@ import javax.inject.Inject
 interface TokenStorage {
     suspend fun getAccessToken(): String?
     suspend fun setToken(token: String)
+    suspend fun clearToken()
 }
 
 class TokenStorageImpl @Inject constructor(
@@ -18,6 +19,10 @@ class TokenStorageImpl @Inject constructor(
 
     override suspend fun setToken(token: String) {
         securedKeyValueStorage.putString(KEY, token)
+    }
+
+    override suspend fun clearToken() {
+        setToken("")
     }
 
     companion object {

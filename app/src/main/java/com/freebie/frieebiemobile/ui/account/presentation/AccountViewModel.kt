@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.login.domain.AuthStatus
 import com.freebie.frieebiemobile.login.domain.AuthStatusUseCase
+import com.freebie.frieebiemobile.login.domain.LogoutUseCase
 import com.freebie.frieebiemobile.network.NoInternetException
 import com.freebie.frieebiemobile.ui.account.data.storage.UserProfileStorage
 import com.freebie.frieebiemobile.ui.account.data.storage.UserProfileStorageImpl
@@ -36,6 +37,7 @@ class AccountViewModel @Inject constructor(
     private val authStatusUseCase: AuthStatusUseCase,
     private val ownUserProfileUseCase: OwnUserProfileUseCase,
     private val getAccountInfoUseCase: GetAccountInfoUseCase,
+    private val logoutUseCase: LogoutUseCase,
     private val mapper: AccountUIMapper
 ) : ViewModel() {
 
@@ -49,6 +51,7 @@ class AccountViewModel @Inject constructor(
         get() = _state
 
     private val accountInfoJob: Job? = null
+    private var logoutJob: Job? = null
 
     init {
         observeOwnUserProfile()
@@ -57,7 +60,7 @@ class AccountViewModel @Inject constructor(
 
     fun refresh() {
         if (accountInfoJob?.isActive == true) return
-        requestAccountData()
+        requestAccountData()// todo update job
     }
 
     private fun requestAccountData() {
@@ -154,6 +157,18 @@ class AccountViewModel @Inject constructor(
             viewModelScope.launch { emitAccountState(accountUI = newList) }
         }
 
+    }
+
+    fun logout() {
+        if (logoutJob?.isActive == true) return
+        logoutJob = viewModelScope.launch {
+            logoutUseCase.logout().onSuccess { success ->
+                if (success) {
+                    _state.emit(_state.value.copy(ownProfile = null))
+                    refresh()
+                }
+            }
+        }
     }
 
     companion object {

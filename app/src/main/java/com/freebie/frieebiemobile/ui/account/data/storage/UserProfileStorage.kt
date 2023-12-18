@@ -14,8 +14,8 @@ import javax.inject.Inject
 interface UserProfileStorage {
     fun getOwnProfileFlow(): Flow<ProfileModel>
     suspend fun updateOwnProfile(profile: ProfileModel)
-
     suspend fun getOwnProfile(): ProfileModel
+    suspend fun clear()
 }
 
 class UserProfileStorageImpl @Inject constructor(
@@ -41,5 +41,9 @@ class UserProfileStorageImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             return@withContext mapper.mapToDomain(userProfileDaoProvider.getUserProfileDao().getProfile())
         }
+
+    override suspend fun clear() = withContext(Dispatchers.IO) {
+        userProfileDaoProvider.getUserProfileDao().clearTable()
+    }
 
 }

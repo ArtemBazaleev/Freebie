@@ -75,6 +75,9 @@ class AccountFragment : Fragment(), AccountClickListener{
                     googleAuth.requestAuth(requireActivity())
                 }
             }
+            ButtonAction.Logout -> {
+                accountViewModel.logout()
+            }
             null -> CouponDetailsFragment.show(childFragmentManager, CouponTransitUIData("1"))
         }
 

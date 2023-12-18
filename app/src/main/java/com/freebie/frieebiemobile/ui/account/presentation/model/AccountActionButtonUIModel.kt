@@ -11,5 +11,6 @@ data class AccountActionButtonUIModel(
 }
 
 enum class ButtonAction {
-    GoogleSignIn
+    GoogleSignIn,
+    Logout
 }

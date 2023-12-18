@@ -16,11 +16,11 @@ interface KeyValueStorage {
 
     suspend fun putLong(key: String, value: Long)
     suspend fun getLong(key: String, defValue: Long): Long
+    suspend fun clear()
 }
 
 class KeyValueStorageImpl @Inject constructor(
     @ApplicationContext private val context: Context
-
 ): KeyValueStorage {
 
     private val Context.dataStore by preferencesDataStore(name = "settings")
@@ -50,6 +50,12 @@ class KeyValueStorageImpl @Inject constructor(
             context.dataStore.data.first()[longPreferencesKey(key)] ?: defValue
         } catch (e: Exception) {
             defValue
+        }
+    }
+
+    override suspend fun clear() {
+        context.dataStore.edit {
+            it.clear()
         }
     }
 
