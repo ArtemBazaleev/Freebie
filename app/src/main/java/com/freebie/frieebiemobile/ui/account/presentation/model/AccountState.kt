@@ -6,5 +6,6 @@ data class AccountState (
     val ownProfile: UserUiModel?,
     val accountUI: List<AccountUIModel>,
     val isRefreshing: Boolean = false,
-    val placeholder: PlaceHolderInfo? = null
+    val placeholder: PlaceHolderInfo? = null,
+    val isAuthed: Boolean = false
 )

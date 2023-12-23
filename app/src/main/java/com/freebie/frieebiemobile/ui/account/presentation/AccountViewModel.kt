@@ -54,6 +54,7 @@ class AccountViewModel @Inject constructor(
     private var logoutJob: Job? = null
 
     init {
+        Log.d("AccountViewModel", "init vm")
         observeOwnUserProfile()
         requestAccountData()
     }
@@ -80,7 +81,7 @@ class AccountViewModel @Inject constructor(
             val accountInfo = result.getOrThrow()
             this.accountInfo = accountInfo
             val sections = mapper.mapAccountInfo(accountInfo, isAuthorized = true)
-            emitAccountState(accountUI = sections, isRefreshing = false)
+            emitAccountState(accountUI = sections, isRefreshing = false, isAuthed = true)
         } catch (e: NoInternetException) {
             emitAccountState(
                 isRefreshing = false,
@@ -111,7 +112,8 @@ class AccountViewModel @Inject constructor(
                 ),
                 isAuthorized = false
             ),
-            isRefreshing = false
+            isRefreshing = false,
+            isAuthed = false
         )
     }
 
@@ -119,13 +121,15 @@ class AccountViewModel @Inject constructor(
         ownProfile: UserUiModel? = null,
         accountUI: List<AccountUIModel>? = null,
         isRefreshing: Boolean? = null,
-        placeholder: PlaceHolderInfo? = null
+        placeholder: PlaceHolderInfo? = null,
+        isAuthed: Boolean? = null
     ) = _state.emit(
         AccountState(
             ownProfile = ownProfile ?: _state.value.ownProfile,
             accountUI = accountUI ?: _state.value.accountUI,
             isRefreshing = isRefreshing ?: _state.value.isRefreshing,
-            placeholder = placeholder ?: _state.value.placeholder
+            placeholder = placeholder ?: _state.value.placeholder,
+            isAuthed = isAuthed ?: _state.value.isAuthed
         ).apply {
             Log.d("AccountViewModel", "emitAccountState = $this")
         }

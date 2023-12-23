@@ -2,17 +2,33 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/navigation_home"
+    app:startDestination="@id/feed_creen"
     android:id="@+id/feed_navigation">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/feed_creen"
         android:name="com.freebie.frieebiemobile.ui.feed.FeedFragment"
         android:label="@string/app_bar_all"
         tools:layout="@layout/fragment_feed" >
         <action
             android:id="@+id/action_navigation_feed"
-            app:restoreState="true"/>
+            app:restoreState="true"
+            app:destination="@+id/navigation_company_details"
+            />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_company_details"
+        android:name="com.freebie.frieebiemobile.ui.company.presentation.CompanyDetailsFragment"
+        tools:layout="@layout/fragment_company">
+
+        <argument
+            android:name="companyId"
+            app:argType="string"
+            android:defaultValue="" />
+
+    </fragment>
+
 
 </navigation>

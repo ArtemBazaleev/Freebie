@@ -2,13 +2,18 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/navigation_notifications"
-    android:id="@+id/navigation_notification">
+    app:startDestination="@id/account_screen"
+    android:id="@+id/navigation_account">
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/account_screen"
         android:name="com.freebie.frieebiemobile.ui.account.presentation.AccountFragment"
         android:label="@string/app_bar_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_navigation_account"
+            app:restoreState="true"
+            />
+    </fragment>
 
 </navigation>

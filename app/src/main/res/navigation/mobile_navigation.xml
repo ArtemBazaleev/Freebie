@@ -7,7 +7,7 @@
 
     <include app:graph="@navigation/feed_navigation"/>
     <include app:graph="@navigation/category_navigation"/>
-    <include app:graph="@navigation/navigation_notification"/>
+    <include app:graph="@navigation/account_navigation"/>
 
 
 </navigation>

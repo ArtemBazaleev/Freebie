@@ -9,15 +9,19 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentFeedBinding
+import com.freebie.frieebiemobile.ui.company.presentation.CompanyDetailsFragment
 import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
 import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
 import com.freebie.frieebiemobile.ui.feed.adapter.FeedAdapter
 import com.freebie.frieebiemobile.ui.feed.adapter.FeedClickListener
+import com.freebie.frieebiemobile.ui.feed.models.CompanyHeaderItem
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.models.FeedShimmer
 import com.freebie.frieebiemobile.ui.feed.models.FeedState
 import com.freebie.frieebiemobile.ui.utils.RecyclerPaginationUtil
+import com.freebie.frieebiemobile.ui.utils.getNavComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -116,6 +120,15 @@ class FeedFragment : Fragment(), FeedClickListener {
                 priceWithDiscount = couponUI.priceWithDiscount,
                 priceWithoutDiscount = couponUI.price
             )
+        )
+    }
+
+    override fun onCompanyClicked(company: CompanyHeaderItem) {
+        requireActivity().getNavComponent()?.navigate(
+            R.id.navigation_company_details,
+            Bundle().apply {
+                putString(CompanyDetailsFragment.COMPANY_ID, company.companyId)
+            }
         )
     }
 }

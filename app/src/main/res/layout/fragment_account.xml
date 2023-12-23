@@ -36,6 +36,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginStart="@dimen/default_side_margin_l"
+                android:layout_marginEnd="@dimen/default_side_margin"
                 android:ellipsize="end"
                 android:gravity="start|center"
                 android:scrollHorizontally="true"
@@ -45,6 +46,17 @@
                 android:textSize="26sp"
                 app:layout_collapseMode="pin"
                 tools:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_exit"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="end|center"
+                android:tint="@color/primary_text"
+                android:visibility="gone"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_marginEnd="@dimen/default_side_margin"
+                app:srcCompat="@drawable/ic_exit" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

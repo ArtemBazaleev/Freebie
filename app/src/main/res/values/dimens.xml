@@ -11,6 +11,7 @@
     <dimen name="default_top_margin_xl">20dp</dimen>
     <dimen name="default_top_margin_s">4dp</dimen>
     <dimen name="default_bottom_margin">10dp</dimen>
+    <dimen name="default_bottom_margin_l">16dp</dimen>
 
     <dimen name="coupon_width">280dp</dimen>
     <dimen name="coupon_height">140dp</dimen>

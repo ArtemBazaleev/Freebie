@@ -22,6 +22,8 @@ import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupUiMod
 import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
 import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
+import com.freebie.frieebiemobile.ui.utils.gone
+import com.freebie.frieebiemobile.ui.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -65,6 +67,10 @@ class AccountFragment : Fragment(), AccountClickListener{
     private fun initView() {
         binding.accountRefreshLayout.setOnRefreshListener {
             accountViewModel.refresh()
+        }
+
+        binding.ivExit.setOnClickListener {
+            accountViewModel.logout()
         }
     }
 
@@ -120,6 +126,8 @@ class AccountFragment : Fragment(), AccountClickListener{
                     accountAdapter?.submitList(it.accountUI)
                     handlePlaceHolder(it)
                     handleShimmer(it)
+                    if (it.isAuthed) binding.ivExit.visible()
+                    else binding.ivExit.gone()
                 }
             }
         }

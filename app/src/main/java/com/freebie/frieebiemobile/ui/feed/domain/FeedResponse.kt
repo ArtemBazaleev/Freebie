@@ -23,5 +23,16 @@ data class CouponModel(
 )
 
 data class BookletModel(
-    val avatar: String
+    val id: String,
+    val avatar: String,
+    val name: String
 )
+
+class BookletByStatus(
+    val status: BookletStatus,
+    val booklets: List<BookletModel>
+)
+
+enum class BookletStatus {
+    IN_REVIEW, ACTIVE, EXPIRED, UNRECOGNIZED
+}

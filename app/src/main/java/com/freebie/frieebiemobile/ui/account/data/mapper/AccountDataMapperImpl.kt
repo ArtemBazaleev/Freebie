@@ -13,41 +13,16 @@ import com.freebie.protos.CouponModelProtos
 import com.freebie.protos.UserProfileApiProtos.AccountDataResponse
 import javax.inject.Inject
 
-class AccountDataMapperImpl @Inject constructor() {
+class AccountDataMapperImpl @Inject constructor(
+    private val couponMapper: CouponsDataMapperImpl
+) {
     fun map(proto: AccountDataResponse): AccountInfoModel {
         return AccountInfoModel(
             balance = proto.data.balance,
             companies = mapCompany(proto.data.companiesList),
-            coupons = mapCoupons(proto.data.couponsList)
+            coupons = couponMapper.mapCoupons(proto.data.couponsList)
         )
     }
-
-    private fun mapCoupons(
-        couponsListProto: MutableList<CouponModelProtos.CouponsByStatus>
-    ): List<CouponsByGroupModel> {
-        val result = mutableListOf<CouponsByGroupModel>()
-        couponsListProto.forEach { couponsByStatusProto ->
-            val coupons = couponsByStatusProto.couponsList.map { couponProto ->
-                CouponModel(
-                    id = couponProto.encryptedId,
-                    avatar = couponProto.imageUrl,
-                    name = couponProto.name,
-                    description = couponProto.description,
-                    discount = couponProto.discount,
-                    priceWithDiscount = couponProto.priceWithDiscount,
-                    priceWithoutDiscount = couponProto.priceWithoutDiscount
-                )
-            }
-            result.add(
-                CouponsByGroupModel(
-                    statusCoupon = mapStatusCoupon(couponsByStatusProto.status),
-                    coupons = coupons
-                )
-            )
-        }
-        return result
-    }
-
     private fun mapCompany(
         companiesList: MutableList<CompanyModelProtos.CompanyByStatus>
     ): List<CompaniesByGroupModel> {
@@ -85,13 +60,4 @@ class AccountDataMapperImpl @Inject constructor() {
         }
     }
 
-    private fun mapStatusCoupon(status: CouponModelProtos.Status): StatusCoupon {
-        return when(status) {
-            CouponModelProtos.Status.ACTIVE -> StatusCoupon.ACTIVE
-            CouponModelProtos.Status.USED -> StatusCoupon.USED
-            CouponModelProtos.Status.EXPIRED -> StatusCoupon.EXPIRED
-            CouponModelProtos.Status.UNRECOGNIZED -> StatusCoupon.UNRECOGNIZED
-            CouponModelProtos.Status.RESERVED -> StatusCoupon.RESERVED
-        }
-    }
 }

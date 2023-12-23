@@ -35,7 +35,11 @@ class FeedRepositoryImpl @Inject constructor(
                         )
                     },
                     booklet = discount.bookletsList.map { booklet ->
-                        BookletModel(booklet.imageUrl)
+                        BookletModel(
+                            id = booklet.encryptedId,
+                            name = booklet.name,
+                            avatar = booklet.imageUrl
+                        )
                     }
                 )
             }

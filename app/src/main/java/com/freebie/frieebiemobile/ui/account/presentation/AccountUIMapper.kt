@@ -18,7 +18,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class AccountUIMapper @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val couponUiMapper: CouponUiMapper
 ) {
 
     fun mapAccountInfo(
@@ -27,8 +28,7 @@ class AccountUIMapper @Inject constructor(
         selectedGroupId: Int? = null
     ): List<AccountUIModel> {
         val result = mutableListOf<AccountUIModel>()
-
-        result.add(AccountHeaderUIModel("My coupons")) //todo
+        result.add(AccountHeaderUIModel("My coupons"))
         if (accountInfo.coupons.isEmpty()) {
             result.addAll(getEmptyCouponsSection())
         } else {
@@ -40,6 +40,7 @@ class AccountUIMapper @Inject constructor(
                         StatusCoupon.EXPIRED -> R.string.expired
                         StatusCoupon.UNRECOGNIZED -> R.string.unrecognized
                         StatusCoupon.RESERVED -> R.string.reserved
+                        StatusCoupon.IN_REVIEW -> R.string.in_review
                     }, isActive = if (selectedGroupId == null) {
                         index == 0
                     } else {
@@ -55,15 +56,7 @@ class AccountUIMapper @Inject constructor(
             }?.coupons ?: emptyList()
 
             result.add(AccountCouponsUIModel(coupons = coupons.map { couponModel ->
-                CouponUI(
-                    id = couponModel.id,
-                    avatar = couponModel.avatar,
-                    name = couponModel.name ?: "",
-                    description = couponModel.description ?: "",
-                    discount = couponModel.discount ?: "",
-                    priceWithDiscount = couponModel.priceWithDiscount,
-                    price = couponModel.priceWithoutDiscount
-                )
+                couponUiMapper.mapCoupon(couponModel)
             }))
         }
 
@@ -86,8 +79,6 @@ class AccountUIMapper @Inject constructor(
 
         if (!isAuthorized) {
             result.addAll(getAuthSection())
-        } else {
-            result.addAll(getLogoutSection())
         }
         return result
     }

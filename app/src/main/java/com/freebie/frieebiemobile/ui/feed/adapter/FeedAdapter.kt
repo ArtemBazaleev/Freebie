@@ -51,6 +51,7 @@ class FeedAdapter(
             )
 
             FeedItemType.COMPANY_HEADER.intValue -> CompanyHeaderViewHolder(
+                companyClickListener = { clickListener.onCompanyClicked(it) },
                 inflater.inflate(
                     R.layout.item_company_header,
                     parent,

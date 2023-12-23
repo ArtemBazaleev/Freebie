@@ -8,12 +8,23 @@ import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.ui.feed.models.CompanyHeaderItem
 
-class CompanyHeaderViewHolder(itemView: View) : ViewHolder(itemView) {
+class CompanyHeaderViewHolder(
+    private val companyClickListener: (CompanyHeaderItem) -> Unit = {},
+    itemView: View
+) : ViewHolder(itemView) {
 
     private val avatar: ImageView = itemView.findViewById(R.id.company_avatar)
     private val companyName: TextView = itemView.findViewById(R.id.company_name)
+    private var data: CompanyHeaderItem? = null
+
+    init {
+        itemView.setOnClickListener {
+            data?.let(companyClickListener)
+        }
+    }
 
     fun onBind(item: CompanyHeaderItem) {
+        data = item
         Glide.with(avatar.context)
             .load(item.avatar)
             .circleCrop()
