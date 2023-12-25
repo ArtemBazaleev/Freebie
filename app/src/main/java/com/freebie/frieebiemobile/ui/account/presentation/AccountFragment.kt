@@ -11,17 +11,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentAccountBinding
 import com.freebie.frieebiemobile.login.GoogleAuth
 import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountAdapter
 import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountClickListener
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountActionButtonUIModel
+import com.freebie.frieebiemobile.ui.account.presentation.model.AccountCompanyUIModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountState
 import com.freebie.frieebiemobile.ui.account.presentation.model.ButtonAction
 import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupUiModel
+import com.freebie.frieebiemobile.ui.company.presentation.CompanyDetailsFragment
 import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
 import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
+import com.freebie.frieebiemobile.ui.utils.getNavComponent
 import com.freebie.frieebiemobile.ui.utils.gone
 import com.freebie.frieebiemobile.ui.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -96,6 +100,15 @@ class AccountFragment : Fragment(), AccountClickListener{
 
     override fun couponGroupClick(group: CouponGroupUiModel) {
         accountViewModel.onCouponGroupClicked(group)
+    }
+
+    override fun companyClicked(company: AccountCompanyUIModel) {
+        requireActivity().getNavComponent()?.navigate(
+            R.id.navigation_company_details,
+            Bundle().apply {
+                putString(CompanyDetailsFragment.COMPANY_ID, company.companyId)
+            }
+        )
     }
 
     override fun onCouponClicked(coupon: CouponUI) {

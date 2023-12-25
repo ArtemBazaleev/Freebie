@@ -5,34 +5,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
-import com.freebie.frieebiemobile.databinding.FragmentAccountBinding
 import com.freebie.frieebiemobile.databinding.FragmentCompanyBinding
-import com.freebie.frieebiemobile.login.GoogleAuth
-import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountAdapter
-import com.freebie.frieebiemobile.ui.account.presentation.adapter.AccountClickListener
-import com.freebie.frieebiemobile.ui.account.presentation.model.AccountActionButtonUIModel
-import com.freebie.frieebiemobile.ui.account.presentation.model.AccountState
-import com.freebie.frieebiemobile.ui.account.presentation.model.ButtonAction
-import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupUiModel
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
 import com.freebie.frieebiemobile.ui.company.presentation.model.EMPTY_COMPANY_UI_STATE
-import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
-import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
 import com.freebie.frieebiemobile.ui.feed.adapter.CouponsAdapter
 import com.freebie.frieebiemobile.ui.feed.adapter.OffersAdapter
-import com.freebie.frieebiemobile.ui.feed.models.CouponUI
+import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
 import com.freebie.frieebiemobile.ui.utils.gone
 import com.freebie.frieebiemobile.ui.utils.visible
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class CompanyDetailsFragment : Fragment() {
@@ -47,6 +38,10 @@ class CompanyDetailsFragment : Fragment() {
     private val viewModel by viewModels<CompanyDetailsViewModel>()
     private var couponsAdapter: CouponsAdapter? = null
     private var offersAdapter: OffersAdapter? = null
+
+    private fun getCompanyId(): String {
+        return arguments?.getString(COMPANY_ID) ?: error("company id required")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +62,7 @@ class CompanyDetailsFragment : Fragment() {
     }
 
 
+
     private fun initAdapter() {
         couponsAdapter = CouponsAdapter {  }
         offersAdapter = OffersAdapter()
@@ -80,14 +76,35 @@ class CompanyDetailsFragment : Fragment() {
                 viewModel.state.collect(::handleState)
             }
         }
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.placeholderState.collect(::handlePlaceholder)
+            }
+        }
+    }
+
+    private fun handlePlaceholder(placeHolderState: PlaceHolderState?) {
+        if (placeHolderState == null) {
+            binding.companyPlaceholder.gone()
+        } else {
+            binding.companyPlaceholder.visible()
+            binding.appBar.setExpanded(false, true)
+            binding.content.gone()
+            binding.shimmer.root.gone()
+            binding.companyPlaceholder.setState(placeHolderState, true) {
+                binding.shimmer.root.visible()
+                viewModel.requestCompanyDetails(getCompanyId())
+            }
+        }
     }
 
     private fun handleState(state: CompanyDetailsUiState) {
+        Log.d("CompanyDetailsFragment", "observed state = $state")
         if (state == EMPTY_COMPANY_UI_STATE) {
             binding.content.gone()
             binding.shimmer.root.visible()
-        }
-        else {
+        } else {
             binding.shimmer.root.gone()
             binding.content.visible()
         }

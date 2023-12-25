@@ -76,7 +76,11 @@ class AccountAdapter(
             }
             AccountType.COMPANY.intValue -> {
                 AccountCompanyVH(
-                    inflater.inflate(R.layout.item_account_company, parent, false)
+                    inflater.inflate(
+                        R.layout.item_account_company, parent,
+                        false
+                    ),
+                    clickListener = accountClickListener
                 )
             }
             else -> error("Unsupported view type")

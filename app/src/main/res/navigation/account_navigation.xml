@@ -11,9 +11,20 @@
         android:label="@string/app_bar_account"
         tools:layout="@layout/fragment_account" >
         <action
-            android:id="@+id/action_navigation_account"
-            app:restoreState="true"
-            />
+            android:id="@+id/action_account_screen_to_navigation_company_details"
+            app:destination="@id/navigation_company_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_company_details"
+        android:name="com.freebie.frieebiemobile.ui.company.presentation.CompanyDetailsFragment"
+        tools:layout="@layout/fragment_company">
+
+        <argument
+            android:name="companyId"
+            app:argType="string"
+            android:defaultValue="" />
+
     </fragment>
 
 </navigation>

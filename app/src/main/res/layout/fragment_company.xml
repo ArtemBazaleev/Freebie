@@ -61,7 +61,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -71,9 +70,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_bar">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/about_header"
@@ -158,7 +159,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/booklet_header"
                 tools:listitem="@layout/item_offer" />
-            
+
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/content"
                 android:visibility="gone"
@@ -169,6 +170,16 @@
             <include
                 android:id="@+id/shimmer"
                 layout="@layout/company_shimmer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.freebie.frieebiemobile.ui.utils.PlaceHolderView
+                android:id="@+id/company_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
