@@ -31,7 +31,7 @@ class CompanyListMapper @Inject constructor() {
             }
             if (coupons.isNotEmpty()) feedItems.add(CouponsItem(it.id, coupons))
             val booklet = it.booklet.map { booklet ->
-                OfferUI(booklet.avatar)
+                OfferUI(booklet.id, booklet.avatar)
             }
             if (booklet.isNotEmpty()) feedItems.add(OffersItem(it.id, booklet))
         }

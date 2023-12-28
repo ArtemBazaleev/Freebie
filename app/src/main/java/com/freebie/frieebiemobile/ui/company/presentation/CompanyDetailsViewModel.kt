@@ -7,6 +7,12 @@ import com.freebie.frieebiemobile.ui.company.domain.usecase.GetCompanyDetailsUse
 import com.freebie.frieebiemobile.ui.company.presentation.mapper.CompanyUiMapper
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
 import com.freebie.frieebiemobile.ui.company.presentation.model.EMPTY_COMPANY_UI_STATE
+import com.freebie.frieebiemobile.ui.company.presentation.paging.BookletsCompanyPagingHelper
+import com.freebie.frieebiemobile.ui.company.presentation.paging.CouponsCompanyPagingHelper
+import com.freebie.frieebiemobile.ui.coupon.domain.GetCouponsByCompanyUseCase
+import com.freebie.frieebiemobile.ui.feed.models.CouponUI
+import com.freebie.frieebiemobile.ui.feed.models.OfferUI
+import com.freebie.frieebiemobile.ui.utils.PaginationCallback
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -19,6 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CompanyDetailsViewModel @Inject constructor(
     private val getCompanyDetailsUseCase: GetCompanyDetailsUseCase,
+    private val couponsPagingHelper: CouponsCompanyPagingHelper,
+    private val bookletPagingHelper: BookletsCompanyPagingHelper,
     private val mapper: CompanyUiMapper
 ): ViewModel() {
 
@@ -34,9 +42,11 @@ class CompanyDetailsViewModel @Inject constructor(
 
     fun requestCompanyDetails(companyId: String) {
         if (requestCompanyInfoJob?.isActive == true) return
+        initPaging(companyId)
         requestCompanyInfoJob = viewModelScope.launch {
             _placeholderState.emit(null)
             getCompanyDetailsUseCase.getCompanyInfo(companyId).onSuccess { companyModel ->
+                couponsPagingHelper.clear()
                 _state.emit(mapper.map(companyModel))
                 _placeholderState.emit(null)
             }.onFailure {
@@ -46,5 +56,29 @@ class CompanyDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    private fun initPaging(companyId: String) {
+        couponsPagingHelper.init(viewModelScope, companyId) { couponUIS ->
+            val state = _state.value
+            val newCoupons = mutableListOf<CouponUI>().apply {
+                addAll(_state.value.coupons)
+                addAll(couponUIS)
+            }
+            _state.tryEmit(state.copy(coupons = newCoupons))
+        }
+
+        bookletPagingHelper.init(viewModelScope, companyId) { booklets ->
+            val state = _state.value
+            val bookletsList = mutableListOf<OfferUI>().apply {
+                addAll(_state.value.booklets)
+                addAll(booklets)
+            }
+            _state.tryEmit(state.copy(booklets = bookletsList))
+        }
+    }
+
+    fun getCouponsPagingCallback() = couponsPagingHelper
+
+    fun getBookletsPagingCallback() = bookletPagingHelper
 
 }

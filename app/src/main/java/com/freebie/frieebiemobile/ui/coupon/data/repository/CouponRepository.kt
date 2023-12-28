@@ -7,6 +7,12 @@ import javax.inject.Inject
 
 interface CouponRepository {
     suspend fun getCouponDescription(couponId: String): Result<CouponDescriptionModel>
+
+    suspend fun getCouponsByCompany(
+        companyId: String,
+        page: Int,
+        pageSize: Int
+    ): Result<List<CouponDescriptionModel>>
 }
 
 class CouponRepositoryImpl @Inject constructor(
@@ -16,10 +22,20 @@ class CouponRepositoryImpl @Inject constructor(
 
     override suspend fun getCouponDescription(couponId: String): Result<CouponDescriptionModel> =
         try {
-            Result.success(mapper.map(api.getCouponInfo(couponId)))
+            Result.success(mapper.map(api.getCouponInfo(couponId).coupon))
         } catch (e: Exception) {
             Result.failure(e)
         }
 
-
+    override suspend fun getCouponsByCompany(
+        companyId: String,
+        page: Int,
+        pageSize: Int
+    ): Result<List<CouponDescriptionModel>> =
+        try {
+            val apiResponse = api.getCouponsByCompanyId(companyId, page, pageSize)
+            Result.success(apiResponse.couponsList.map(mapper::map))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
 }

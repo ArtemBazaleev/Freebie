@@ -4,6 +4,7 @@ import android.content.Context
 import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.ui.account.domain.model.AccountInfoModel
 import com.freebie.frieebiemobile.ui.account.domain.model.StatusCoupon
+import com.freebie.frieebiemobile.ui.account.presentation.mappers.CouponUiMapper
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountActionButtonUIModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountCompanyUIModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.AccountCouponsUIModel
@@ -13,7 +14,6 @@ import com.freebie.frieebiemobile.ui.account.presentation.model.AccountUIModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.ButtonAction
 import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupUiModel
 import com.freebie.frieebiemobile.ui.account.presentation.model.CouponGroupsUIModel
-import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

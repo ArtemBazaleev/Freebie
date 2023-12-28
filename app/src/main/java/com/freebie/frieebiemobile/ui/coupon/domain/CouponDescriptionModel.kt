@@ -12,6 +12,7 @@ class CouponDescriptionModel(
     val priceOfCoupon: Double,
     val priceWithDiscount: Double,
     val priceWithoutDiscount: Double,
+    val discount: String,
     val status: CouponStatus
 )
 

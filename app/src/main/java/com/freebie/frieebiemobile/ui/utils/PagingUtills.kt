@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerPaginationUtil(
     private val layoutManager: LinearLayoutManager,
-    private val pagingCallback: PaginationCallback
+    private val pagingCallback: PaginationCallback,
+    private val threshHold: Int? = null
 ) : RecyclerView.OnScrollListener() {
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -17,7 +18,7 @@ class RecyclerPaginationUtil(
         val firstItemVisiblePosition = layoutManager.findFirstVisibleItemPosition()
 
         if (!pagingCallback.isLoadingAfter() && !pagingCallback.isBottomPage()) {
-            if ((visibleItemCount + firstItemVisiblePosition) >= totalItemCount - DISTANCE
+            if ((visibleItemCount + firstItemVisiblePosition) >= totalItemCount - (threshHold?: DISTANCE)
                 && firstItemVisiblePosition >= 0
             ) {
                 recyclerView.post { pagingCallback.loadAfter() }
@@ -31,7 +32,7 @@ class RecyclerPaginationUtil(
         val delta = recyclerView.bottom - recyclerView.height + recyclerView.scrollY
         if (delta == 0) {
             if (!pagingCallback.isLoadingBefore() && !pagingCallback.isTopPage()) {
-                if (firstItemVisiblePosition in 0..DISTANCE) {
+                if (firstItemVisiblePosition in 0..(threshHold?: DISTANCE)) {
                     recyclerView.post { pagingCallback.loadBefore() }
                 }
             }

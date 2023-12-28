@@ -8,22 +8,22 @@ import javax.inject.Inject
 
 class CouponDescriptionMapperImpl @Inject constructor() {
     fun map(
-        proto: CouponDescriptionApiProtos.CouponDescriptionResponse
+        proto: CouponDescriptionModelProtos.CouponDescription
     ): CouponDescriptionModel {
-        proto.coupon.status
         return CouponDescriptionModel(
-            id = proto.coupon.encryptedId,
-            description = proto.coupon.description,
-            avatar = proto.coupon.imageUrl,
-            createdAt = proto.coupon.createdAt,
-            expiredAt = proto.coupon.expiredAt,
-            availableAmount = proto.coupon.availableAmount.toInt(),
-            companyId = proto.coupon.companyId,
-            name = proto.coupon.name,
-            priceOfCoupon = proto.coupon.couponPrice,
-            priceWithDiscount = proto.coupon.priceWithDiscount,
-            priceWithoutDiscount = proto.coupon.priceWithoutDiscount,
-            status = proto.coupon.status.toCouponStatus()
+            id = proto.encryptedId,
+            description = proto.description,
+            avatar = proto.imageUrl,
+            createdAt = proto.createdAt,
+            expiredAt = proto.expiredAt,
+            availableAmount = proto.availableAmount.toInt(),
+            companyId = proto.companyId,
+            name = proto.name,
+            priceOfCoupon = proto.couponPrice,
+            priceWithDiscount = proto.priceWithDiscount,
+            priceWithoutDiscount = proto.priceWithoutDiscount,
+            discount = proto.discount,
+            status = proto.status.toCouponStatus()
         )
     }
 

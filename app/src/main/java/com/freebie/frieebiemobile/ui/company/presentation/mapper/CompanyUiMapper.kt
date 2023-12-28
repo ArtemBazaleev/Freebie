@@ -1,12 +1,10 @@
 package com.freebie.frieebiemobile.ui.company.presentation.mapper
 
 import com.freebie.frieebiemobile.ui.account.domain.model.StatusCoupon
-import com.freebie.frieebiemobile.ui.account.presentation.CouponUiMapper
-import com.freebie.frieebiemobile.ui.account.presentation.model.AccountCouponsUIModel
+import com.freebie.frieebiemobile.ui.account.presentation.mappers.CouponUiMapper
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyModel
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
 import com.freebie.frieebiemobile.ui.feed.domain.BookletStatus
-import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
 import javax.inject.Inject
 
@@ -26,7 +24,7 @@ class CompanyUiMapper @Inject constructor(
                 couponUiMapper.mapCoupon(couponModel)
             } ?: emptyList(),
             booklets = bookletGroup?.booklets?.map {
-                OfferUI(it.avatar)
+                OfferUI(it.id, it.avatar)
             } ?: emptyList()
         )
     }

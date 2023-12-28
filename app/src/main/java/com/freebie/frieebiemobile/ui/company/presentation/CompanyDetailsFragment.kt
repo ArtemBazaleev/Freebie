@@ -5,12 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.databinding.FragmentCompanyBinding
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
@@ -18,9 +18,9 @@ import com.freebie.frieebiemobile.ui.company.presentation.model.EMPTY_COMPANY_UI
 import com.freebie.frieebiemobile.ui.feed.adapter.CouponsAdapter
 import com.freebie.frieebiemobile.ui.feed.adapter.OffersAdapter
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
+import com.freebie.frieebiemobile.ui.utils.RecyclerPaginationUtil
 import com.freebie.frieebiemobile.ui.utils.gone
 import com.freebie.frieebiemobile.ui.utils.visible
-import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -62,12 +62,30 @@ class CompanyDetailsFragment : Fragment() {
     }
 
 
-
     private fun initAdapter() {
-        couponsAdapter = CouponsAdapter {  }
+        couponsAdapter = CouponsAdapter { }
         offersAdapter = OffersAdapter()
         binding.rvCoupons.adapter = couponsAdapter
         binding.rvBooklets.adapter = offersAdapter
+        initPaging()
+    }
+
+    private fun initPaging() {
+        binding.rvCoupons.addOnScrollListener(
+            RecyclerPaginationUtil(
+                binding.rvCoupons.layoutManager as LinearLayoutManager,
+                viewModel.getCouponsPagingCallback(),
+                threshHold = 5
+            )
+        )
+
+        binding.rvBooklets.addOnScrollListener(
+            RecyclerPaginationUtil(
+                binding.rvBooklets.layoutManager as LinearLayoutManager,
+                viewModel.getBookletsPagingCallback(),
+                threshHold = 5
+            )
+        )
     }
 
     private fun observeState() {
