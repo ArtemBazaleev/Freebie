@@ -15,8 +15,11 @@ import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.databinding.FragmentCompanyBinding
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
 import com.freebie.frieebiemobile.ui.company.presentation.model.EMPTY_COMPANY_UI_STATE
+import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
+import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIData
 import com.freebie.frieebiemobile.ui.feed.adapter.CouponsAdapter
 import com.freebie.frieebiemobile.ui.feed.adapter.OffersAdapter
+import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
 import com.freebie.frieebiemobile.ui.utils.RecyclerPaginationUtil
 import com.freebie.frieebiemobile.ui.utils.gone
@@ -63,11 +66,20 @@ class CompanyDetailsFragment : Fragment() {
 
 
     private fun initAdapter() {
-        couponsAdapter = CouponsAdapter { }
+        couponsAdapter = CouponsAdapter {
+            openCouponDetails(it)
+        }
         offersAdapter = OffersAdapter()
         binding.rvCoupons.adapter = couponsAdapter
         binding.rvBooklets.adapter = offersAdapter
         initPaging()
+    }
+
+    private fun openCouponDetails(it: CouponUI) {
+        CouponDetailsFragment.show(childFragmentManager, CouponTransitUIData(
+            it.id, it.description, it.avatar,
+            it.name, it.priceWithDiscount, it.price
+        ))
     }
 
     private fun initPaging() {
