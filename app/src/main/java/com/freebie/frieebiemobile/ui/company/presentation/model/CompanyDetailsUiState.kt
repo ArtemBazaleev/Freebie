@@ -9,7 +9,8 @@ data class CompanyDetailsUiState(
     val description: String,
     val name: String,
     val coupons: List<CouponUI> = emptyList(),
-    val booklets: List<OfferUI> = emptyList()
+    val booklets: List<OfferUI> = emptyList(),
+    val externalLinks: List<ExternalLinkUiModel> = emptyList()
 )
 
 val EMPTY_COMPANY_UI_STATE = CompanyDetailsUiState(

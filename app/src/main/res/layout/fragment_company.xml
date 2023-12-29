@@ -160,16 +160,46 @@
                 app:layout_constraintTop_toBottomOf="@+id/booklet_header"
                 tools:listitem="@layout/item_offer" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/external_link_header"
+                style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_side_margin"
+                android:layout_marginTop="@dimen/default_top_margin"
+                android:layout_marginEnd="@dimen/default_side_margin"
+                android:text="@string/company_links"
+                android:textColor="@color/primary_text"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_booklets" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_external_links"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/external_link_header"
+                tools:listitem="@layout/item_external_link" />
+
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/content"
                 android:visibility="gone"
+                tools:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="rv_booklets,rv_coupons,about_desc,coupons_header,booklet_header,about_header"/>
+                app:constraint_referenced_ids="rv_booklets,rv_coupons,about_desc,coupons_header,booklet_header,about_header, external_link_header, rv_external_links"/>
 
             <include
                 android:id="@+id/shimmer"
                 layout="@layout/company_shimmer"
+                tools:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -41,6 +41,7 @@ class AccountUIMapper @Inject constructor(
                         StatusCoupon.UNRECOGNIZED -> R.string.unrecognized
                         StatusCoupon.RESERVED -> R.string.reserved
                         StatusCoupon.IN_REVIEW -> R.string.in_review
+                        StatusCoupon.CANCELED -> R.string.canceled
                     }, isActive = if (selectedGroupId == null) {
                         index == 0
                     } else {

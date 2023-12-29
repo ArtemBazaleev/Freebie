@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/external_link"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/external_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="@dimen/default_top_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/default_side_margin_s"
+        android:layout_marginEnd="@dimen/default_side_margin_s"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/ic_telegram" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/external_name"
+        style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_top_margin"
+        android:textColor="@color/primary_text"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/external_icon"
+        app:layout_constraintStart_toStartOf="@+id/external_icon"
+        app:layout_constraintTop_toBottomOf="@+id/external_icon"
+        tools:text="Telegram" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

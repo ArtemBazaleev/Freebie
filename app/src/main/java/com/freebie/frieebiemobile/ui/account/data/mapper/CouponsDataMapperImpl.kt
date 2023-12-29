@@ -67,6 +67,9 @@ class CouponsDataMapperImpl @Inject constructor() {
             CouponDescriptionModelProtos.Status.EXPIRED -> StatusCoupon.EXPIRED
             CouponDescriptionModelProtos.Status.UNRECOGNIZED -> StatusCoupon.UNRECOGNIZED
             CouponDescriptionModelProtos.Status.IN_REVIEW -> StatusCoupon.IN_REVIEW
+            CouponDescriptionModelProtos.Status.USED -> StatusCoupon.USED
+            CouponDescriptionModelProtos.Status.RESERVED -> StatusCoupon.RESERVED
+            CouponDescriptionModelProtos.Status.CANCELED -> StatusCoupon.CANCELED
         }
     }
 
