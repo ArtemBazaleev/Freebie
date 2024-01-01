@@ -29,7 +29,7 @@ class CompanyDomainMapper @Inject constructor(
         val result = mutableListOf<ExternalCompanyLink>()
         links.forEach { link ->
             when(link.type) {
-                LinkType.WHATSUP -> ExternalLinkType.WHATSAPP
+                LinkType.WHATSAPP -> ExternalLinkType.WHATSAPP
                 LinkType.INSTAGRAM -> ExternalLinkType.INSTAGRAM
                 LinkType.TELEGRAM -> ExternalLinkType.TELEGRAM
                 else -> null

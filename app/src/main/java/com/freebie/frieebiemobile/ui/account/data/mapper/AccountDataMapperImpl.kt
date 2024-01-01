@@ -3,13 +3,9 @@ package com.freebie.frieebiemobile.ui.account.data.mapper
 import com.freebie.frieebiemobile.ui.account.domain.model.AccountInfoModel
 import com.freebie.frieebiemobile.ui.account.domain.model.CompaniesByGroupModel
 import com.freebie.frieebiemobile.ui.account.domain.model.CompanyExtendedModel
-import com.freebie.frieebiemobile.ui.account.domain.model.CouponsByGroupModel
 import com.freebie.frieebiemobile.ui.account.domain.model.StatusCompany
-import com.freebie.frieebiemobile.ui.account.domain.model.StatusCoupon
-import com.freebie.frieebiemobile.ui.feed.domain.CouponModel
 import com.freebie.protos.CompanyModelProtos
 import com.freebie.protos.CompanyModelProtos.CompanyStatus
-import com.freebie.protos.CouponModelProtos
 import com.freebie.protos.UserProfileApiProtos.AccountDataResponse
 import javax.inject.Inject
 
@@ -20,7 +16,7 @@ class AccountDataMapperImpl @Inject constructor(
         return AccountInfoModel(
             balance = proto.data.balance,
             companies = mapCompany(proto.data.companiesList),
-            coupons = couponMapper.mapCoupons(proto.data.couponsList)
+            coupons = couponMapper.mapPurchasesToCoupons(proto.data.purchasesList)
         )
     }
     private fun mapCompany(
