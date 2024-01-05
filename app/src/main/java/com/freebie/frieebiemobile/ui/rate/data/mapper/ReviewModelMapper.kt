@@ -16,7 +16,7 @@ class ReviewModelMapper @Inject constructor() {
         )
     }
 
-    private fun mapReply(comment: ReviewModelProtos.Comment?): ReplyCompanyModel? {
+    private fun mapReply(comment: ReviewModelProtos.Reply?): ReplyCompanyModel? {
         comment ?: return null
         return ReplyCompanyModel(comment.message)
     }
