@@ -10,6 +10,8 @@ import com.freebie.frieebiemobile.ui.company.presentation.model.ExternalLinkUiMo
 import com.freebie.frieebiemobile.ui.company.presentation.model.LinkUiType
 import com.freebie.frieebiemobile.ui.feed.domain.BookletStatus
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
+import com.freebie.frieebiemobile.ui.rate.domain.RateModel
+import com.freebie.frieebiemobile.ui.rate.presentation.model.RateUiModel
 import javax.inject.Inject
 
 class CompanyUiMapper @Inject constructor(
@@ -24,14 +26,29 @@ class CompanyUiMapper @Inject constructor(
             companyId = companyModel.id,
             avatar = companyModel.avatar,
             description = companyModel.description,
+            rating = companyModel.rating.ratingScore,
             coupons = couponGroup?.coupons?.map { couponModel ->
                 couponUiMapper.mapCoupon(couponModel)
             } ?: emptyList(),
             booklets = bookletGroup?.booklets?.map {
                 OfferUI(it.id, it.avatar)
             } ?: emptyList(),
-            externalLinks = mapExternalLinks(companyModel.linksList)
+            externalLinks = mapExternalLinks(companyModel.linksList),
+            rateList = mapRate(companyModel.rateList),
+            showMoreComment = companyModel.rating.reviewCount > companyModel.rateList.size,
+            canRate = companyModel.rating.canRate
         )
+    }
+
+    private fun mapRate(rateList: List<RateModel>): List<RateUiModel> {
+        return rateList.map { model ->
+            RateUiModel(
+                id = model.id,
+                comment = model.comment,
+                reviewerRating = model.reviewerRating,
+                reviewerName = model.reviewerName
+            )
+        }
     }
 
     private fun mapExternalLinks(linksList: List<ExternalCompanyLink>): List<ExternalLinkUiModel> {

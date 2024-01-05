@@ -9,6 +9,7 @@
     <string name="no_internet">Oops, no internet</string>
     <string name="no_data">Oops, nothing found</string>
     <string name="generic_error_message">Oops, something went wrong</string>
+    <string name="success_review_send">Thank you for feedback!</string>
     <string name="all_discounts">All discounts</string>
     <string name="categories">Categories</string>
     <string name="auth_client_id">552671974636-78mhcqclttdf0r77ln9bn67rqmifq952.apps.googleusercontent.com</string>
@@ -20,6 +21,7 @@
     <string name="coupons">Coupons</string>
     <string name="booklets">Booklets</string>
     <string name="company_links">Company links</string>
+    <string name="rating_and_review">Rating and reviews</string>
     <string name="about_company">About</string>
     <string name="unrecognized">Unrecognized</string>
     <string name="reserved">Reserved</string>
@@ -27,8 +29,14 @@
     <string name="canceled">Canceled</string>
     <string name="dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
     <string name="get_coupon_action_btn_text">Get coupon just for %1$s</string>
+    <string name="rate_company_name">Rate %1$s</string>
     <string name="refresh">Refresh</string>
     <string name="whatsapp">WhatsApp</string>
     <string name="telegram">Telegram</string>
     <string name="instagram">Instagram</string>
+    <string name="rate_company">Rate company</string>
+    <string name="show_more">Show more</string>
+    <string name="submit_review">Submit review</string>
+    <string name="leave_comment_here">Leave comment here</string>
+    <string name="polite_desc">Please be polite and respect other people</string>
 </resources>

@@ -22,6 +22,9 @@ import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIDa
 import com.freebie.frieebiemobile.ui.feed.adapter.CouponsAdapter
 import com.freebie.frieebiemobile.ui.feed.adapter.OffersAdapter
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
+import com.freebie.frieebiemobile.ui.rate.presentation.RateCompanyBottomSheet
+import com.freebie.frieebiemobile.ui.rate.presentation.adapter.RateAdapter
+import com.freebie.frieebiemobile.ui.rate.presentation.model.RateCompanyTransmitModel
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
 import com.freebie.frieebiemobile.ui.utils.RecyclerPaginationUtil
 import com.freebie.frieebiemobile.ui.utils.gone
@@ -48,6 +51,7 @@ class CompanyDetailsFragment : Fragment() {
     private var couponsAdapter: CouponsAdapter? = null
     private var offersAdapter: OffersAdapter? = null
     private var externalLinksAdapter: ExternalLinkAdapter? = null
+    private var rateAdapter: RateAdapter? = null
 
     private fun getCompanyId(): String {
         return arguments?.getString(COMPANY_ID) ?: error("company id required")
@@ -67,8 +71,7 @@ class CompanyDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
         observeState()
-        val id = arguments?.getString(COMPANY_ID) ?: error("company id required")
-        viewModel.requestCompanyDetails(id)
+        viewModel.requestCompanyDetails(getCompanyId())
     }
 
 
@@ -80,17 +83,21 @@ class CompanyDetailsFragment : Fragment() {
         externalLinksAdapter = ExternalLinkAdapter {
             deepLinkHelper.openDeepLink(it.url)
         }
+        rateAdapter = RateAdapter()
         binding.rvCoupons.adapter = couponsAdapter
         binding.rvBooklets.adapter = offersAdapter
         binding.rvExternalLinks.adapter = externalLinksAdapter
+        binding.rvRate.adapter = rateAdapter
         initPaging()
     }
 
     private fun openCouponDetails(it: CouponUI) {
-        CouponDetailsFragment.show(childFragmentManager, CouponTransitUIData(
-            it.id, it.description, it.avatar,
-            it.name, it.priceWithDiscount, it.price
-        ))
+        CouponDetailsFragment.show(
+            childFragmentManager, CouponTransitUIData(
+                it.id, it.description, it.avatar,
+                it.name, it.priceWithDiscount, it.price
+            )
+        )
     }
 
     private fun initPaging() {
@@ -130,7 +137,6 @@ class CompanyDetailsFragment : Fragment() {
             binding.companyPlaceholder.gone()
         } else {
             binding.companyPlaceholder.visible()
-            binding.appBar.setExpanded(false, true)
             binding.content.gone()
             binding.shimmer.root.gone()
             binding.companyPlaceholder.setState(placeHolderState, true) {
@@ -154,7 +160,21 @@ class CompanyDetailsFragment : Fragment() {
         couponsAdapter?.submitList(state.coupons)
         offersAdapter?.submitList(state.booklets)
         externalLinksAdapter?.submitList(state.externalLinks)
+        rateAdapter?.submitList(state.rateList)
         binding.companyName.text = state.name
+        binding.companyRating.text = state.rating.toString()
+        if (state.showMoreComment) binding.moreComments.visible()
+        else binding.moreComments.gone()
+        if (state.canRate) binding.addRating.visible()
+        else binding.addRating.gone()
+        binding.addRating.setOnClickListener {
+            RateCompanyBottomSheet.show(childFragmentManager, RateCompanyTransmitModel(getCompanyId(), state.name)) {
+                viewModel.requestCompanyDetails(getCompanyId())
+            }
+        }
+        if (state.rating == 0.0 && !state.canRate)
+            binding.ratingBar.gone()
+        else binding.ratingBar.visible()
     }
 
     override fun onDestroyView() {
@@ -163,6 +183,7 @@ class CompanyDetailsFragment : Fragment() {
         couponsAdapter = null
         offersAdapter = null
         externalLinksAdapter = null
+        rateAdapter = null
     }
 
     companion object {

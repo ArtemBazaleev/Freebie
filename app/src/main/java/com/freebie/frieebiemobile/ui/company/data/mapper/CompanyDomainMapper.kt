@@ -4,9 +4,12 @@ import com.freebie.frieebiemobile.ui.account.data.mapper.CouponsDataMapperImpl
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyModel
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
+import com.freebie.frieebiemobile.ui.company.domain.model.RatingInfoModel
+import com.freebie.frieebiemobile.ui.rate.domain.RateModel
 import com.freebie.protos.CompanyApiProtos
 import com.freebie.protos.CompanyModelProtos.Link
 import com.freebie.protos.CompanyModelProtos.LinkType
+import com.freebie.protos.RatingModelProtos
 import javax.inject.Inject
 
 class CompanyDomainMapper @Inject constructor(
@@ -19,21 +22,42 @@ class CompanyDomainMapper @Inject constructor(
             name = companyResponse.data.company.name,
             avatar = companyResponse.data.company.avatarUrl,
             description = companyResponse.data.company.description,
+            rating = mapRating(companyResponse.data.company.rating),
             coupons = couponMapper.mapCouponsDescription(companyResponse.data.couponDescriptionList),
             booklets = bookletMapper.mapBooklet(companyResponse.data.bookletList),
-            linksList = mapLinksList(companyResponse.data.company.linksList)
+            linksList = mapLinksList(companyResponse.data.company.linksList),
+            rateList = mapRateComments(companyResponse.data.company.rating)
+        )
+    }
+
+    private fun mapRateComments(rating: RatingModelProtos.Rating): List<RateModel> {
+        return rating.reviewsList.map { rate ->
+            RateModel(
+                id = rate.id,
+                reviewerName = rate.reviewerName,
+                comment = rate.message,
+                reviewerRating = rate.score.toFloat()
+            )
+        }
+    }
+
+    private fun mapRating(rating: RatingModelProtos.Rating): RatingInfoModel {
+        return RatingInfoModel(
+            ratingScore = rating.score,
+            canRate = rating.isAllowedToReview,
+            reviewCount = rating.totalReviews.toInt()
         )
     }
 
     private fun mapLinksList(links: List<Link>): List<ExternalCompanyLink> {
         val result = mutableListOf<ExternalCompanyLink>()
         links.forEach { link ->
-            when(link.type) {
+            when (link.type) {
                 LinkType.WHATSAPP -> ExternalLinkType.WHATSAPP
                 LinkType.INSTAGRAM -> ExternalLinkType.INSTAGRAM
                 LinkType.TELEGRAM -> ExternalLinkType.TELEGRAM
                 else -> null
-            } ?.let { nonNullType ->
+            }?.let { nonNullType ->
                 result.add(ExternalCompanyLink(link.url, nonNullType))
             }
         }

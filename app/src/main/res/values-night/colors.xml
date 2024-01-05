@@ -3,6 +3,7 @@
     <color name="primary_text">#fafafa</color>
     <color name="secondary_text">#4DFAFAFA</color>
     <color name="selected_card_bg">#1AFAFAFA</color>
+    <color name="color_rating">#1AFFFFFF</color>
     <color name="regular_card_bg">#FF424242</color>
     <color name="color_statusbar">#000000</color>
     <color name="color_label">#f47847</color>
