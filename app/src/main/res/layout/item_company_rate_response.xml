@@ -4,35 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/default_side_margin"
+    android:layout_marginStart="@dimen/response_start_margin"
+    android:layout_marginEnd="@dimen/default_side_margin"
+    android:layout_marginBottom="@dimen/default_bottom_margin"
     android:background="@drawable/bg_comment">
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/user_avatar"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginTop="@dimen/default_top_margin"
-        android:layout_marginStart="@dimen/default_side_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/reviewer_name"
         style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_side_margin"
-        android:layout_marginStart="@dimen/default_side_margin_s"
         android:gravity="start"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_top_margin"
+        android:layout_marginStart="@dimen/default_side_margin"
+        android:layout_marginEnd="@dimen/default_side_margin"
+        tools:text="Elena"
         android:textColor="@color/primary_text"
         android:textSize="18sp"
-        android:lines="1"
-        android:ellipsize="end"
-        app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
-        app:layout_constraintEnd_toStartOf="@id/review_score"
-        app:layout_constraintStart_toEndOf="@+id/user_avatar"
-        app:layout_constraintTop_toTopOf="@+id/user_avatar"
-        tools:text="Elena" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -44,35 +35,13 @@
         android:layout_marginStart="@dimen/default_side_margin"
         android:layout_marginEnd="@dimen/default_side_margin"
         android:gravity="start"
-        android:maxLines="3"
         tools:text="Veeeeryyy good djalla ;h hjl hj hjbkjhbkhgvhkgv"
         android:ellipsize="end"
         android:textColor="@color/primary_text"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reviewer_name"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/review_score"
-        style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_side_margin"
-        android:background="@drawable/bg_rating"
-        android:paddingStart="8dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/reviewer_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/reviewer_name"
-        tools:text="4.0" />
-
+        app:layout_constraintTop_toBottomOf="@+id/reviewer_name" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/review_date"

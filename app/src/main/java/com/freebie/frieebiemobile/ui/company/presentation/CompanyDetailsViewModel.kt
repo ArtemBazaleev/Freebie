@@ -47,6 +47,7 @@ class CompanyDetailsViewModel @Inject constructor(
             _placeholderState.emit(null)
             getCompanyDetailsUseCase.getCompanyInfo(companyId).onSuccess { companyModel ->
                 couponsPagingHelper.clear()
+                bookletPagingHelper.clear()
                 _state.emit(mapper.map(companyModel))
                 _placeholderState.emit(null)
             }.onFailure {

@@ -24,7 +24,23 @@
             android:name="companyId"
             app:argType="string"
             android:defaultValue="" />
+        <action
+            android:id="@+id/action_navigation_company_details_to_navigation_company_reviews2"
+            app:destination="@id/navigation_company_reviews" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_company_reviews"
+        android:name="com.freebie.frieebiemobile.ui.rate.presentation.CompanyReviewsFragment"
+        tools:layout="@layout/fragment_company_reviews">
+
+        <argument
+            android:name="companyId"
+            app:argType="string"
+            android:defaultValue="" />
+
+    </fragment>
+
 
 </navigation>

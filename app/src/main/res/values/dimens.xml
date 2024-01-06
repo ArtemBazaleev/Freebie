@@ -9,6 +9,7 @@
     <dimen name="default_side_margin_l">16dp</dimen>
     <dimen name="default_top_margin">10dp</dimen>
     <dimen name="default_top_margin_xl">20dp</dimen>
+    <dimen name="response_start_margin">100dp</dimen>
     <dimen name="default_top_margin_s">4dp</dimen>
     <dimen name="default_bottom_margin">10dp</dimen>
     <dimen name="default_bottom_margin_l">16dp</dimen>

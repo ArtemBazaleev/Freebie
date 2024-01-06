@@ -1,8 +1,9 @@
 package com.freebie.frieebiemobile.ui.rate.presentation.model
 
-data class RateUiModel(
-    val id: String,
-    val reviewerName: String,
-    val comment: String,
-    val reviewerRating: Float?
-)
+sealed interface RateUIModel {
+    fun getItemViewType(): RateItemViewType
+}
+
+enum class RateItemViewType(val intValue: Int) {
+    COMPANY_RESPONSE(1), USER_REVIEW(0)
+}

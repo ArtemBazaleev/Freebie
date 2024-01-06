@@ -36,6 +36,8 @@ class CompanyDomainMapper @Inject constructor(
                 id = rate.id,
                 reviewerName = rate.reviewerName,
                 comment = rate.message,
+                avatar = rate.reviewerPicture,
+                date = rate.createdAt,
                 reviewerRating = rate.score.toFloat()
             )
         }

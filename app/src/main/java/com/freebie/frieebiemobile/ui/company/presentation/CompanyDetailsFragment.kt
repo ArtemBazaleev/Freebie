@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentCompanyBinding
 import com.freebie.frieebiemobile.deeplinks.DeepLinkHelperImpl
 import com.freebie.frieebiemobile.ui.company.presentation.adapter.ExternalLinkAdapter
@@ -22,11 +23,13 @@ import com.freebie.frieebiemobile.ui.coupon.presentation.model.CouponTransitUIDa
 import com.freebie.frieebiemobile.ui.feed.adapter.CouponsAdapter
 import com.freebie.frieebiemobile.ui.feed.adapter.OffersAdapter
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
+import com.freebie.frieebiemobile.ui.rate.presentation.CompanyReviewsFragment
 import com.freebie.frieebiemobile.ui.rate.presentation.RateCompanyBottomSheet
 import com.freebie.frieebiemobile.ui.rate.presentation.adapter.RateAdapter
 import com.freebie.frieebiemobile.ui.rate.presentation.model.RateCompanyTransmitModel
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
 import com.freebie.frieebiemobile.ui.utils.RecyclerPaginationUtil
+import com.freebie.frieebiemobile.ui.utils.getNavComponent
 import com.freebie.frieebiemobile.ui.utils.gone
 import com.freebie.frieebiemobile.ui.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -171,6 +174,14 @@ class CompanyDetailsFragment : Fragment() {
             RateCompanyBottomSheet.show(childFragmentManager, RateCompanyTransmitModel(getCompanyId(), state.name)) {
                 viewModel.requestCompanyDetails(getCompanyId())
             }
+        }
+        binding.moreComments.setOnClickListener {
+            activity?.getNavComponent()?.navigate(
+                R.id.navigation_company_reviews,
+                Bundle().apply {
+                     putString(CompanyReviewsFragment.COMPANY_ID, getCompanyId())
+                }
+            )
         }
         if (state.rating == 0.0 && !state.canRate)
             binding.ratingBar.gone()

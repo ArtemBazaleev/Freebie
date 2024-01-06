@@ -12,12 +12,18 @@ class ReviewModelMapper @Inject constructor() {
             reviewerName = reviewModel.reviewerName,
             comment = reviewModel.message,
             reviewerRating = reviewModel.score.toFloat(),
+            avatar = reviewModel.reviewerPicture,
+            date = reviewModel.createdAt,
             reply = mapReply(reviewModel.comment)
         )
     }
 
     private fun mapReply(comment: ReviewModelProtos.Reply?): ReplyCompanyModel? {
-        comment ?: return null
-        return ReplyCompanyModel(comment.message)
+        if (comment == null || comment.id.isNullOrEmpty()) return null
+        return ReplyCompanyModel(
+            id = comment.id,
+            message = comment.message,
+            date = comment.createdAt
+        )
     }
 }

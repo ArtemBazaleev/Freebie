@@ -2,7 +2,7 @@ package com.freebie.frieebiemobile.ui.company.presentation.model
 
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
-import com.freebie.frieebiemobile.ui.rate.presentation.model.RateUiModel
+import com.freebie.frieebiemobile.ui.rate.presentation.model.UserRateUiModel
 
 data class CompanyDetailsUiState(
     val companyId: String,
@@ -15,7 +15,7 @@ data class CompanyDetailsUiState(
     val coupons: List<CouponUI> = emptyList(),
     val booklets: List<OfferUI> = emptyList(),
     val externalLinks: List<ExternalLinkUiModel> = emptyList(),
-    val rateList: List<RateUiModel> = emptyList()
+    val rateList: List<UserRateUiModel> = emptyList()
 )
 
 val EMPTY_COMPANY_UI_STATE = CompanyDetailsUiState(

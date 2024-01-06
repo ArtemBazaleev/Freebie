@@ -16,13 +16,13 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val authGoogleUseCase: AuthGoogleUseCase,
-    private val webSocketClient: SocketIOClient
+    //private val webSocketClient: SocketIOClient
 ) : ViewModel(), LifecycleObserver {
 
     init {
         viewModelScope.launch {
             Log.d("MainActivityViewModel", "webSocketClient.initWebSocket() ")
-            webSocketClient.initWebSocket()
+            //webSocketClient.initWebSocket()
         }
     }
 
