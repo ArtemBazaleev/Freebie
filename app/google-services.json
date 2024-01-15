@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "552671974636",
+    "project_id": "freebie-app-402115",
+    "storage_bucket": "freebie-app-402115.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552671974636:android:affb9aca23d69600a681c9",
+        "android_client_info": {
+          "package_name": "com.freebie.frieebiemobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "552671974636-05no6fjcdn560p6hjs9qnfde6ja6nk3p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.freebie.frieebiemobile",
+            "certificate_hash": "f1b5f6d55ac31bc75350570fde8b3d785c941393"
+          }
+        },
+        {
+          "client_id": "552671974636-78mhcqclttdf0r77ln9bn67rqmifq952.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ9KOSd8EtQEBu2mCXmFcLHhgXLLPDQfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "552671974636-78mhcqclttdf0r77ln9bn67rqmifq952.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

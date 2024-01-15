@@ -1,5 +1,7 @@
 package com.freebie.frieebiemobile.login.data.repository
 
+import android.util.Log
+import com.freebie.frieebiemobile.fcm.FcmTokenProvider
 import com.freebie.frieebiemobile.login.TokenStorage
 import com.freebie.frieebiemobile.login.data.api.AuthApi
 import com.freebie.frieebiemobile.login.domain.AuthStatus
@@ -16,6 +18,7 @@ interface AuthRepository {
     suspend fun auth(token: String): Result<ProfileModel>
     suspend fun isAuthorized(): AuthStatus
     suspend fun logout(): Result<Boolean>
+    suspend fun registerFcmToken()
 }
 
 class AuthRepositoryImpl @Inject constructor(
@@ -23,8 +26,20 @@ class AuthRepositoryImpl @Inject constructor(
     private val securedStorage: SecuredKeyValueStorage,
     private val storage: KeyValueStorage,
     private val tokenStorage: TokenStorage,
-    private val profileStorage: UserProfileStorage
+    private val profileStorage: UserProfileStorage,
+    private val fcmTokenProvider: FcmTokenProvider
 ) : AuthRepository {
+
+    override suspend fun registerFcmToken() {
+        runCatching {
+            fcmTokenProvider.provideFcmToken()
+        }.onSuccess {
+            Log.d("registerFcmToken", "token = $it")
+            api.registerFcmToken(it)
+        }.onFailure {
+            Log.d("registerFcmToken", "error = ${it.message}")
+        }
+    }
 
     override suspend fun auth(token: String): Result<ProfileModel> = withContext(Dispatchers.IO) {
         return@withContext try {

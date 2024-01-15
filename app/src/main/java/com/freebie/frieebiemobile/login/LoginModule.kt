@@ -10,6 +10,8 @@ import com.freebie.frieebiemobile.login.domain.AuthStatusUseCase
 import com.freebie.frieebiemobile.login.domain.AuthStatusUseCaseImpl
 import com.freebie.frieebiemobile.login.domain.LogoutUseCase
 import com.freebie.frieebiemobile.login.domain.LogoutUseCaseImpl
+import com.freebie.frieebiemobile.login.domain.RegisterFcmUseCase
+import com.freebie.frieebiemobile.login.domain.RegisterFcmUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,6 +38,9 @@ interface BindVmModule {
 
     @Binds
     fun bindLogoutUseCase(impl: LogoutUseCaseImpl): LogoutUseCase
+
+    @Binds
+    fun bindsRegisterFcm(impl: RegisterFcmUseCaseImpl): RegisterFcmUseCase
 }
 
 @Module

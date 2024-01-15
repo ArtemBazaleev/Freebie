@@ -3,6 +3,7 @@ package com.freebie.frieebiemobile.login.data.api
 import com.freebie.frieebiemobile.network.HttpAccess
 import com.freebie.frieebiemobile.network.Method
 import com.freebie.protos.AuthApiProtos
+import com.freebie.protos.PushApiProtos
 import com.freebie.protos.UserProfileModelProtos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,11 +12,24 @@ import javax.inject.Inject
 interface AuthApi {
     suspend fun auth(token: String): Result<Pair<String, UserProfileModelProtos.UserProfile>>
     suspend fun logout(): Result<Boolean>
+    suspend fun registerFcmToken(token: String): Result<Boolean>
 }
 
 class AuthApiImpl @Inject constructor(
     private val httpAccess: HttpAccess
 ) : AuthApi {
+
+    override suspend fun registerFcmToken(token: String): Result<Boolean> = withContext(Dispatchers.IO) {
+        val body = PushApiProtos.SavePushTokenRequest.newBuilder()
+            .setToken(token)
+
+        val result = httpAccess.httpRequest(
+            requestUrlSegment = FIREBASE_ENDPOINT,
+            body = body.build().toByteArray(),
+            method = Method.POST
+        )
+        return@withContext Result.success(result.isSuccess)
+    }
 
     override suspend fun auth(
         token: String
@@ -55,5 +69,6 @@ class AuthApiImpl @Inject constructor(
     companion object {
         private const val AUTH_ENDPOINT = "v1/auth"
         private const val LOGOUT_ENDPOINT = "v1/auth/logout"
+        private const val FIREBASE_ENDPOINT = "v1/push/token"
     }
 }

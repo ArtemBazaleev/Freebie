@@ -40,4 +40,6 @@
     <string name="leave_comment_here">Leave comment here</string>
     <string name="polite_desc">Please be polite and respect other people</string>
     <string name="company_response">Company reply</string>
+    <string name="general_channel_name">Freebie promo</string>
+    <string name="general_channel_description">Freebie promotion notification</string>
 </resources>

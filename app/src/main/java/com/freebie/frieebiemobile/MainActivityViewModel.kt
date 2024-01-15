@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.login.domain.AuthGoogleUseCase
+import com.freebie.frieebiemobile.login.domain.RegisterFcmUseCase
 import com.freebie.frieebiemobile.network.socket.SocketIOClient
 import com.freebie.frieebiemobile.network.socket.WebSocketClient
 import com.google.android.gms.auth.api.identity.SignInCredential
@@ -16,13 +17,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val authGoogleUseCase: AuthGoogleUseCase,
+    private val registerFcmUseCase: RegisterFcmUseCase
     //private val webSocketClient: SocketIOClient
 ) : ViewModel(), LifecycleObserver {
 
     init {
         viewModelScope.launch {
-            Log.d("MainActivityViewModel", "webSocketClient.initWebSocket() ")
-            //webSocketClient.initWebSocket()
+            Log.d("registerFcmToken", "MainActivityViewModel request ")
+            registerFcmUseCase.registerFcm()
         }
     }
 
