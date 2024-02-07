@@ -42,4 +42,7 @@
     <string name="company_response">Company reply</string>
     <string name="general_channel_name">Freebie promo</string>
     <string name="general_channel_description">Freebie promotion notification</string>
+    <string name="reply_to_comment">reply to comment</string>
+    <string name="reply_to_message">Reply to message</string>
+    <string name="send_reply">Send reply</string>
 </resources>

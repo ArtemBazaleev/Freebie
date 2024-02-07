@@ -36,7 +36,8 @@ class CompanyUiMapper @Inject constructor(
             externalLinks = mapExternalLinks(companyModel.linksList),
             rateList = companyModel.rateList.map(rateUiMapper::mapToUserRate),
             showMoreComment = companyModel.rating.reviewCount > companyModel.rateList.size,
-            canRate = companyModel.rating.canRate
+            canRate = companyModel.rating.canRate,
+            canModerate = true//TODO add logic to validate
         )
     }
 

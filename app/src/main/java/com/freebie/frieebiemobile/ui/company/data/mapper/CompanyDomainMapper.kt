@@ -23,6 +23,7 @@ class CompanyDomainMapper @Inject constructor(
             avatar = companyResponse.data.company.avatarUrl,
             description = companyResponse.data.company.description,
             rating = mapRating(companyResponse.data.company.rating),
+            creatorId = companyResponse.data.company.creatorId,
             coupons = couponMapper.mapCouponsDescription(companyResponse.data.couponDescriptionList),
             booklets = bookletMapper.mapBooklet(companyResponse.data.bookletList),
             linksList = mapLinksList(companyResponse.data.company.linksList),

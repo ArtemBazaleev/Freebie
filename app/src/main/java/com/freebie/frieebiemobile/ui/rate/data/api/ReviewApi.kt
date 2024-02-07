@@ -20,11 +20,37 @@ interface ReviewApi {
         page: Int,
         size: Int
     ): Result<ReviewApiProtos.ReviewListResponse>
+
+    suspend fun replyOnComment(
+        commentId: String,
+        message: String
+    ): Result<ReviewApiProtos.ReplyReviewResponse>
 }
 
 class ReviewApiImpl @Inject constructor(
     private val httpAccess: HttpAccess
-): ReviewApi {
+) : ReviewApi {
+
+    override suspend fun replyOnComment(
+        commentId: String,
+        message: String
+    ): Result<ReviewApiProtos.ReplyReviewResponse> = withContext(Dispatchers.IO) {
+        runCatching {
+            val requestBuilder = ReviewApiProtos.ReplyReviewRequest
+                .newBuilder()
+                .setMessage(message)
+            val response = httpAccess.httpRequest(
+                requestUrlSegment = Uri.parse(REPLY_COMMENT)
+                    .buildUpon()
+                    .appendEncodedPath(commentId)
+                    .appendEncodedPath("reply").build()
+                    .toString(),
+                method = Method.POST,
+                body = requestBuilder.build().toByteArray()
+            )
+            ReviewApiProtos.ReplyReviewResponse.parseFrom(response.bodyAsArray)
+        }
+    }
 
     override suspend fun rateCompany(
         rating: Int,
@@ -67,6 +93,7 @@ class ReviewApiImpl @Inject constructor(
     companion object {
         private const val RATE_COMPANY = "v1/reviews/company"
         private const val COMPANY_REVIEWS = "v1/reviews/company"
+        private const val REPLY_COMMENT = "v1/reviews"
     }
 
 }

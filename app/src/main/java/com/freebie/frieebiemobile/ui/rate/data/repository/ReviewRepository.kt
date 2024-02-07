@@ -17,12 +17,26 @@ interface ReviewRepository {
         page: Int,
         size: Int
     ): Result<List<RateModel>>
+
+    suspend fun replyOnComment(
+        commentId: String,
+        message: String
+    ): Result<Boolean>
 }
 
 class ReviewRepositoryImpl @Inject constructor(
     private val reviewApi: ReviewApi,
     private val reviewMapper: ReviewModelMapper
 ) : ReviewRepository {
+
+    override suspend fun replyOnComment(
+        commentId: String,
+        message: String
+    ): Result<Boolean> {
+        val response = reviewApi.replyOnComment(commentId, message)
+        return if (response.isSuccess) Result.success(true)
+        else Result.failure(response.exceptionOrNull() ?: IllegalStateException(""))
+    }
 
     override suspend fun reviewCompany(
         companyId: String,

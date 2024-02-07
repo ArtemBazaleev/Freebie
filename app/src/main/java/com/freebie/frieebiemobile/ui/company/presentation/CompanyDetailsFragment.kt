@@ -86,7 +86,7 @@ class CompanyDetailsFragment : Fragment() {
         externalLinksAdapter = ExternalLinkAdapter {
             deepLinkHelper.openDeepLink(it.url)
         }
-        rateAdapter = RateAdapter()
+        rateAdapter = RateAdapter {}
         binding.rvCoupons.adapter = couponsAdapter
         binding.rvBooklets.adapter = offersAdapter
         binding.rvExternalLinks.adapter = externalLinksAdapter
@@ -179,7 +179,8 @@ class CompanyDetailsFragment : Fragment() {
             activity?.getNavComponent()?.navigate(
                 R.id.navigation_company_reviews,
                 Bundle().apply {
-                     putString(CompanyReviewsFragment.COMPANY_ID, getCompanyId())
+                    putString(CompanyReviewsFragment.COMPANY_ID, getCompanyId())
+                    putBoolean(CompanyReviewsFragment.CAN_MODERATE, state.canModerate)
                 }
             )
         }

@@ -17,6 +17,7 @@ import com.freebie.frieebiemobile.ui.rate.presentation.model.RateCompanyTransmit
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import java.lang.ref.WeakReference
 
 @AndroidEntryPoint

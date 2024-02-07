@@ -10,14 +10,26 @@ import com.freebie.frieebiemobile.ui.rate.presentation.model.UserRateUiModel
 import com.freebie.frieebiemobile.ui.utils.gone
 import com.freebie.frieebiemobile.ui.utils.visible
 
-class RateViewHolder(itemView: View) : ViewHolder(itemView) {
+class RateViewHolder(
+    itemView: View,
+    private val clickListener: (UserRateUiModel) -> Unit = {}
+) : ViewHolder(itemView) {
     private val name = itemView.findViewById<TextView>(R.id.reviewer_name)
     private val comment = itemView.findViewById<TextView>(R.id.reviewer_comment)
     private val review = itemView.findViewById<TextView>(R.id.review_score)
     private val avatar = itemView.findViewById<ImageView>(R.id.user_avatar)
     private val date = itemView.findViewById<TextView>(R.id.review_date)
+    private val replyBtn = itemView.findViewById<TextView>(R.id.reply_btn)
+    private var model: UserRateUiModel? = null
+
+    init {
+        replyBtn.setOnClickListener {
+            model?.let(clickListener)
+        }
+    }
 
     fun bind(userRateUiModel: UserRateUiModel) {
+        model = userRateUiModel
         name.text = userRateUiModel.reviewerName
         comment.text = userRateUiModel.comment
         if (userRateUiModel.needToShowFullText) {
@@ -40,5 +52,11 @@ class RateViewHolder(itemView: View) : ViewHolder(itemView) {
             .into(avatar)
 
         date.text = userRateUiModel.date
+
+        if (userRateUiModel.canReply) {
+            replyBtn.visible()
+        } else {
+            replyBtn.gone()
+        }
     }
 }

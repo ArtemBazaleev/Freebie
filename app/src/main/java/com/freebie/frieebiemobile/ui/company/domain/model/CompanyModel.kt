@@ -10,6 +10,7 @@ class CompanyModel(
     val avatar: String,
     val description: String,
     val rating: RatingInfoModel,
+    val creatorId: String,
     val coupons: List<CouponsByGroupModel>,
     val booklets: List<BookletByStatus>,
     val linksList: List<ExternalCompanyLink>,

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface UserProfileRepository {
-    fun getOwnProfileFlow(): Flow<ProfileModel>
+    fun getOwnProfileFlow(): Flow<ProfileModel> //TODO add getOwnProfile model
 }
 
 class UserProfileRepositoryImpl @Inject constructor(

@@ -12,6 +12,7 @@ data class CompanyDetailsUiState(
     val rating: Double,
     val showMoreComment: Boolean,
     val canRate: Boolean,
+    val canModerate: Boolean,
     val coupons: List<CouponUI> = emptyList(),
     val booklets: List<OfferUI> = emptyList(),
     val externalLinks: List<ExternalLinkUiModel> = emptyList(),
@@ -25,5 +26,6 @@ val EMPTY_COMPANY_UI_STATE = CompanyDetailsUiState(
     name = "",
     rating = 0.0,
     showMoreComment = false,
-    canRate = false
+    canRate = false,
+    canModerate = false
 )

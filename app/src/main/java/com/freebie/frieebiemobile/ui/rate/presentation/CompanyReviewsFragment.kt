@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.freebie.frieebiemobile.databinding.FragmentCompanyReviewsBinding
 import com.freebie.frieebiemobile.ui.rate.presentation.adapter.RateAdapter
 import com.freebie.frieebiemobile.ui.rate.presentation.model.CompanyReviewUIState
-import com.freebie.frieebiemobile.ui.utils.PaginationCallback
+import com.freebie.frieebiemobile.ui.rate.presentation.model.RateCompanyResponseUIModel
+import com.freebie.frieebiemobile.ui.rate.presentation.model.RateUIModel
+import com.freebie.frieebiemobile.ui.rate.presentation.model.ReplyCompanyTransitModel
+import com.freebie.frieebiemobile.ui.rate.presentation.model.UserRateUiModel
 import com.freebie.frieebiemobile.ui.utils.RecyclerPaginationUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,8 +34,12 @@ class CompanyReviewsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val companyId = arguments?.getString(COMPANY_ID) ?: error("Need company id")
-        viewModel.initViewModel(companyId)
+        val canModerate = arguments?.getBoolean(CAN_MODERATE) ?: false
+        viewModel.initViewModel(companyId, canModerate)
     }
+
+    private fun getCompanyId(): String =
+        arguments?.getString(COMPANY_ID) ?: error("Need company id")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,10 +72,16 @@ class CompanyReviewsFragment : Fragment() {
 
     private fun handleState(state: CompanyReviewUIState) {
         adapter?.submitList(state.reviewList)
+        binding.refreshLayout.isRefreshing = state.reviewList.isEmpty()
     }
 
     private fun initView() {
-        adapter = RateAdapter()
+        adapter = RateAdapter { model ->
+            handleClick(model)
+        }
+        binding.refreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
         binding.rvReviews.adapter = adapter
         binding.rvReviews.addOnScrollListener(
             RecyclerPaginationUtil(
@@ -78,7 +91,22 @@ class CompanyReviewsFragment : Fragment() {
         )
     }
 
+    private fun handleClick(model: RateUIModel) {
+        when (model) {
+            is RateCompanyResponseUIModel -> {}
+            is UserRateUiModel -> {
+                ReplyReviewBottomSheet.show(
+                    fm = childFragmentManager,
+                    transitData = ReplyCompanyTransitModel(model)
+                ) { message ->
+                    viewModel.replyComment(message, getCompanyId())
+                }
+            }
+        }
+    }
+
     companion object {
         const val COMPANY_ID = "COMPANY_ID"
+        const val CAN_MODERATE = "CAN_MODERATE"
     }
 }

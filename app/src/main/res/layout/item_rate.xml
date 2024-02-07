@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/default_side_margin"
     android:background="@drawable/bg_comment">
 
@@ -11,8 +11,8 @@
         android:id="@+id/user_avatar"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:layout_marginTop="@dimen/default_top_margin"
         android:layout_marginStart="@dimen/default_side_margin"
+        android:layout_marginTop="@dimen/default_top_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,13 +21,13 @@
         style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_side_margin"
         android:layout_marginStart="@dimen/default_side_margin_s"
+        android:layout_marginEnd="@dimen/default_side_margin"
+        android:ellipsize="end"
         android:gravity="start"
+        android:lines="1"
         android:textColor="@color/primary_text"
         android:textSize="18sp"
-        android:lines="1"
-        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
         app:layout_constraintEnd_toStartOf="@id/review_score"
         app:layout_constraintStart_toEndOf="@+id/user_avatar"
@@ -40,18 +40,18 @@
         style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_top_margin"
         android:layout_marginStart="@dimen/default_side_margin"
+        android:layout_marginTop="@dimen/default_top_margin"
         android:layout_marginEnd="@dimen/default_side_margin"
+        android:ellipsize="end"
         android:gravity="start"
         android:maxLines="3"
-        tools:text="Veeeeryyy good djalla ;h hjl hj hjbkjhbkhgvhkgv"
-        android:ellipsize="end"
         android:textColor="@color/primary_text"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reviewer_name"/>
+        app:layout_constraintTop_toBottomOf="@+id/reviewer_name"
+        tools:text="Veeeeryyy good djalla ;h hjl hj hjbkjhbkhgvhkgv" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/review_score"
@@ -67,11 +67,11 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/reviewer_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/reviewer_name"
-        tools:text="4.0" />
+        tools:text="4.0"
+        tools:visibility="visible" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -79,19 +79,35 @@
         style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_top_margin"
         android:layout_marginBottom="@dimen/default_bottom_margin"
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="3"
-        tools:text="12.12.2023"
         android:textColor="@color/secondary_text"
         android:textSize="16sp"
-        android:layout_marginTop="@dimen/default_top_margin"
-        android:layout_marginEnd="@dimen/default_side_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/reply_btn"
         app:layout_constraintStart_toStartOf="@+id/reviewer_comment"
         app:layout_constraintTop_toBottomOf="@+id/reviewer_comment"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="12.12.2023" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reply_btn"
+        style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="4dp"
+        android:visibility="gone"
+        android:text="@string/reply_to_comment"
+        android:textColor="@color/design_default_color_primary"
+        app:layout_constraintBottom_toBottomOf="@+id/review_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/review_date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

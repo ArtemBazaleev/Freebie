@@ -34,7 +34,8 @@ class RateUiMapper @Inject constructor() {
     fun mapToUserAndCompanyReply(
         model: RateModel,
         showFullText: Boolean = true,
-        showRating: Boolean = true
+        showRating: Boolean = true,
+        canModerate: Boolean
     ): List<RateUIModel> {
         return mutableListOf<RateUIModel>().apply {
             add(UserRateUiModel(
@@ -45,7 +46,8 @@ class RateUiMapper @Inject constructor() {
                 needToShowRating = showRating,
                 avatar = model.avatar,
                 date = sdf.format(Date(model.date)),
-                needToShowFullText = showFullText
+                needToShowFullText = showFullText,
+                canReply = model.reply == null && canModerate
             ))
             if (model.reply != null) {
                 add(RateCompanyResponseUIModel(

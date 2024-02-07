@@ -11,7 +11,9 @@ import com.freebie.frieebiemobile.ui.rate.presentation.model.RateItemViewType
 import com.freebie.frieebiemobile.ui.rate.presentation.model.RateUIModel
 import com.freebie.frieebiemobile.ui.rate.presentation.model.UserRateUiModel
 
-class RateAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RateAdapter(
+    private val clickListener: (RateUIModel) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val differ = AsyncListDiffer(
         this,
@@ -52,7 +54,10 @@ class RateAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
 
             RateItemViewType.USER_REVIEW.intValue -> {
-                RateViewHolder(inflater.inflate(R.layout.item_rate, parent, false))
+                RateViewHolder(
+                    inflater.inflate(R.layout.item_rate, parent, false),
+                    clickListener
+                )
             }
             else -> error("unsupported view type")
         }
