@@ -99,7 +99,7 @@ class CompanyReviewsFragment : Fragment() {
                     fm = childFragmentManager,
                     transitData = ReplyCompanyTransitModel(model)
                 ) { message ->
-                    viewModel.replyComment(message, getCompanyId())
+                    viewModel.replyComment(message, model.id)
                 }
             }
         }
