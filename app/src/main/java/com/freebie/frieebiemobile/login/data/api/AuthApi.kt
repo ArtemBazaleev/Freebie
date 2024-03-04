@@ -19,17 +19,18 @@ class AuthApiImpl @Inject constructor(
     private val httpAccess: HttpAccess
 ) : AuthApi {
 
-    override suspend fun registerFcmToken(token: String): Result<Boolean> = withContext(Dispatchers.IO) {
-        val body = PushApiProtos.SavePushTokenRequest.newBuilder()
-            .setToken(token)
-
-        val result = httpAccess.httpRequest(
-            requestUrlSegment = FIREBASE_ENDPOINT,
-            body = body.build().toByteArray(),
-            method = Method.POST
-        )
-        return@withContext Result.success(result.isSuccess)
-    }
+    override suspend fun registerFcmToken(token: String): Result<Boolean> =
+        withContext(Dispatchers.IO) {
+            val body = PushApiProtos.SavePushTokenRequest.newBuilder()
+                .setToken(token)
+            return@withContext runCatching {
+                httpAccess.httpRequest(
+                    requestUrlSegment = FIREBASE_ENDPOINT,
+                    body = body.build().toByteArray(),
+                    method = Method.POST
+                ).isSuccess
+            }
+        }
 
     override suspend fun auth(
         token: String

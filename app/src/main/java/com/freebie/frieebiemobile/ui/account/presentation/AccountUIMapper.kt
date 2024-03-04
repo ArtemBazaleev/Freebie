@@ -94,7 +94,7 @@ class AccountUIMapper @Inject constructor(
     private fun getEmptyCompaniesSection(): List<AccountUIModel> {
         return mutableListOf<AccountUIModel>().apply {
             add(AccountDescUIModel("Register company to add own coupons"))//todo
-            add(AccountActionButtonUIModel("Register new company", null))//todo
+            add(AccountActionButtonUIModel("Register new company", null, ButtonAction.RegisterCompany))//todo
         }
     }
 

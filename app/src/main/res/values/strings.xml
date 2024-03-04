@@ -45,4 +45,7 @@
     <string name="reply_to_comment">reply to comment</string>
     <string name="reply_to_message">Reply to message</string>
     <string name="send_reply">Send reply</string>
+    <string name="enter_company_name">Enter company name</string>
+    <string name="enter_descriptions">Enter descriptions</string>
+    <string name="select_category">Select category</string>
 </resources>

@@ -89,6 +89,9 @@ class AccountFragment : Fragment(), AccountClickListener{
             ButtonAction.Logout -> {
                 accountViewModel.logout()
             }
+            ButtonAction.RegisterCompany -> {
+                openCreateCompanyScreen()
+            }
             else -> {}
         }
 
@@ -108,6 +111,12 @@ class AccountFragment : Fragment(), AccountClickListener{
             Bundle().apply {
                 putString(CompanyDetailsFragment.COMPANY_ID, company.companyId)
             }
+        )
+    }
+
+    private fun openCreateCompanyScreen() {
+        requireActivity().getNavComponent()?.navigate(
+            R.id.navigation_company_create
         )
     }
 
