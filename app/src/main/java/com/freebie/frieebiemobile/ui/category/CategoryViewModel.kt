@@ -1,12 +1,11 @@
 package com.freebie.frieebiemobile.ui.category
 
-import android.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.network.NoInternetException
 import com.freebie.frieebiemobile.ui.category.domain.usecase.GetCategoryRepositoryUseCase
+import com.freebie.frieebiemobile.ui.category.mapper.CategoryMapper
 import com.freebie.frieebiemobile.ui.category.model.CategoryState
-import com.freebie.frieebiemobile.ui.category.model.CategoryUI
 import com.freebie.frieebiemobile.ui.category.model.ShimmerCategory
 import com.freebie.frieebiemobile.ui.feed.models.PlaceHolderInfo
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
@@ -20,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val getCategoryRepositoryUseCase: GetCategoryRepositoryUseCase
+    private val getCategoryRepositoryUseCase: GetCategoryRepositoryUseCase,
+    private val mapper: CategoryMapper
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -42,13 +42,7 @@ class CategoryViewModel @Inject constructor(
             val categoryResult = getCategoryRepositoryUseCase()
             when {
                 categoryResult.isSuccess -> {
-                    val categories = categoryResult.getOrDefault(emptyList()).map {
-                        CategoryUI(
-                            name = it.categoryName,
-                            color = Color.parseColor(it.categoryColor),
-                            image = it.categoryIcon
-                        )
-                    }
+                    val categories = categoryResult.getOrDefault(emptyList()).map(mapper::mapToUi)
                     if (categories.isEmpty()) emitPlaceholderInfo(PlaceHolderState.NoData)
                     else _state.emit(_state.value.copy(categories = categories))
                 }

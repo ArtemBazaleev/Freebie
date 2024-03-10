@@ -1,5 +1,6 @@
 package com.freebie.frieebiemobile.ui.company.data.api
 
+import android.util.Log
 import com.freebie.frieebiemobile.network.HttpAccess
 import com.freebie.frieebiemobile.network.Method
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyCreationParams
@@ -56,7 +57,7 @@ class CompanyApiImpl @Inject constructor(
                                 .build()
                         )
                     }
-                    avatarUrl = companyCreationParams.avatar
+                    companyCreationParams.avatar?.let { avatarUrl = it }
                     city = companyCreationParams.city
                     categoryId = companyCreationParams.categoryId
                     companyCreationParams.locale.forEach { loc ->
@@ -70,12 +71,13 @@ class CompanyApiImpl @Inject constructor(
                     }
                 }
                 .build()
-
+            Log.d("CreateCompanyViewModel",  "start company creation api $companyRequest")
             val response = httpAccess.httpRequest(
                 requestUrlSegment = CREATE_COMPANY,
                 method = Method.POST,
                 body = companyRequest.toByteArray(),
             )
+            Log.d("CreateCompanyViewModel",  "response code = ${response.code}")
             if (response.isSuccess) return@withContext CompanyApiProtos
                 .CreateCompanyResponse
                 .parseFrom(response.bodyAsArray)

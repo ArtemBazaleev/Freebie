@@ -6,6 +6,7 @@ sealed interface CategoryItem {
 }
 
 data class CategoryUI(
+    val id: String,
     val name: String,
     val color: Int,
     val image: String,

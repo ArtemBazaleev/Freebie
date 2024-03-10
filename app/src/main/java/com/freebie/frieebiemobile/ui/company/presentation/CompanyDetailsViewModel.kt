@@ -3,6 +3,7 @@ package com.freebie.frieebiemobile.ui.company.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.network.NoInternetException
+import com.freebie.frieebiemobile.ui.account.domain.OwnUserProfileUseCase
 import com.freebie.frieebiemobile.ui.company.domain.usecase.GetCompanyDetailsUseCase
 import com.freebie.frieebiemobile.ui.company.presentation.mapper.CompanyUiMapper
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
@@ -10,6 +11,7 @@ import com.freebie.frieebiemobile.ui.company.presentation.model.EMPTY_COMPANY_UI
 import com.freebie.frieebiemobile.ui.company.presentation.paging.BookletsCompanyPagingHelper
 import com.freebie.frieebiemobile.ui.company.presentation.paging.CouponsCompanyPagingHelper
 import com.freebie.frieebiemobile.ui.coupon.domain.GetCouponsByCompanyUseCase
+import com.freebie.frieebiemobile.ui.feed.models.CouponAdapterUiModel
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
 import com.freebie.frieebiemobile.ui.utils.PaginationCallback
@@ -61,7 +63,7 @@ class CompanyDetailsViewModel @Inject constructor(
     private fun initPaging(companyId: String) {
         couponsPagingHelper.init(viewModelScope, companyId) { couponUIS ->
             val state = _state.value
-            val newCoupons = mutableListOf<CouponUI>().apply {
+            val newCoupons = mutableListOf<CouponAdapterUiModel>().apply {
                 addAll(_state.value.coupons)
                 addAll(couponUIS)
             }

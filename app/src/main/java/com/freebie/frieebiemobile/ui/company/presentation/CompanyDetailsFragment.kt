@@ -16,6 +16,7 @@ import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentCompanyBinding
 import com.freebie.frieebiemobile.deeplinks.DeepLinkHelperImpl
 import com.freebie.frieebiemobile.ui.company.presentation.adapter.ExternalLinkAdapter
+import com.freebie.frieebiemobile.ui.company.presentation.controllers.CouponController
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
 import com.freebie.frieebiemobile.ui.company.presentation.model.EMPTY_COMPANY_UI_STATE
 import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
@@ -51,7 +52,7 @@ class CompanyDetailsFragment : Fragment() {
     lateinit var deepLinkHelper: DeepLinkHelperImpl
 
     private val viewModel by viewModels<CompanyDetailsViewModel>()
-    private var couponsAdapter: CouponsAdapter? = null
+    private var couponController: CouponController? = null
     private var offersAdapter: OffersAdapter? = null
     private var externalLinksAdapter: ExternalLinkAdapter? = null
     private var rateAdapter: RateAdapter? = null
@@ -79,7 +80,7 @@ class CompanyDetailsFragment : Fragment() {
 
 
     private fun initAdapter() {
-        couponsAdapter = CouponsAdapter {
+        couponController = CouponController(binding.couponsHeader, binding.rvCoupons) {
             openCouponDetails(it)
         }
         offersAdapter = OffersAdapter()
@@ -87,7 +88,6 @@ class CompanyDetailsFragment : Fragment() {
             deepLinkHelper.openDeepLink(it.url)
         }
         rateAdapter = RateAdapter {}
-        binding.rvCoupons.adapter = couponsAdapter
         binding.rvBooklets.adapter = offersAdapter
         binding.rvExternalLinks.adapter = externalLinksAdapter
         binding.rvRate.adapter = rateAdapter
@@ -104,13 +104,7 @@ class CompanyDetailsFragment : Fragment() {
     }
 
     private fun initPaging() {
-        binding.rvCoupons.addOnScrollListener(
-            RecyclerPaginationUtil(
-                binding.rvCoupons.layoutManager as LinearLayoutManager,
-                viewModel.getCouponsPagingCallback(),
-                threshHold = 5
-            )
-        )
+        couponController?.initPaging(viewModel.getCouponsPagingCallback())
 
         binding.rvBooklets.addOnScrollListener(
             RecyclerPaginationUtil(
@@ -160,8 +154,8 @@ class CompanyDetailsFragment : Fragment() {
         }
         binding.aboutDesc.text = state.description
         Glide.with(requireContext()).load(state.avatar).into(binding.ivCompanyImage)
-        couponsAdapter?.submitList(state.coupons)
         offersAdapter?.submitList(state.booklets)
+        couponController?.handleState(state)
         externalLinksAdapter?.submitList(state.externalLinks)
         rateAdapter?.submitList(state.rateList)
         binding.companyName.text = state.name
@@ -192,7 +186,7 @@ class CompanyDetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        couponsAdapter = null
+        couponController = null
         offersAdapter = null
         externalLinksAdapter = null
         rateAdapter = null

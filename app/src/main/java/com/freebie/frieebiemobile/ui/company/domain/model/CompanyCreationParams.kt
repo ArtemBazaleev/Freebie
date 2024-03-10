@@ -12,4 +12,8 @@ class Locale(
     val langCode: String,
     val description: String,
     val name: String
-)
+) {
+    fun isFilled(): Boolean {
+        return langCode.isNotEmpty() && description.isNotEmpty() && name.isNotEmpty()
+    }
+}

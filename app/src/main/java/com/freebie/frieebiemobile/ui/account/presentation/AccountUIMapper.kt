@@ -53,7 +53,7 @@ class AccountUIMapper @Inject constructor(
             val coupons = if (selectedGroupId == null) {
                 accountInfo.coupons.first()
             } else {
-                accountInfo.coupons.firstOrNull { it.statusCoupon.intValue == selectedGroupId}
+                accountInfo.coupons.firstOrNull { it.statusCoupon.intValue == selectedGroupId }
             }?.coupons ?: emptyList()
 
             result.add(AccountCouponsUIModel(coupons = coupons.map { couponModel ->
@@ -62,20 +62,19 @@ class AccountUIMapper @Inject constructor(
         }
 
         result.add(AccountHeaderUIModel("My companies"))//todo
-        if (accountInfo.companies.isEmpty()) {
-            result.addAll(getEmptyCompaniesSection())
-        } else {
-            val companies = mutableListOf<AccountCompanyUIModel>()
-            accountInfo.companies.forEach { companiesByGroupModel ->
-                companies.addAll(companiesByGroupModel.companies.map { companyExtended ->
-                    AccountCompanyUIModel(
-                        companyId = companyExtended.encryptedId,
-                        companyAvatar = companyExtended.avatarUrl,
-                        companyName = companyExtended.name
-                    )
-                })
-            }
-            result.addAll(companies)
+        val companies = mutableListOf<AccountCompanyUIModel>()
+        accountInfo.companies.forEach { companiesByGroupModel ->
+            companies.addAll(companiesByGroupModel.companies.map { companyExtended ->
+                AccountCompanyUIModel(
+                    companyId = companyExtended.encryptedId,
+                    companyAvatar = companyExtended.avatarUrl,
+                    companyName = companyExtended.name
+                )
+            })
+        }
+        result.addAll(companies)
+        if (accountInfo.companies.size <= 3) {
+            result.addAll(getEmptyCompaniesSection(accountInfo.companies.isNotEmpty()))
         }
 
         if (!isAuthorized) {
@@ -91,10 +90,18 @@ class AccountUIMapper @Inject constructor(
         }
     }
 
-    private fun getEmptyCompaniesSection(): List<AccountUIModel> {
+    private fun getEmptyCompaniesSection(haveCompanies: Boolean): List<AccountUIModel> {
         return mutableListOf<AccountUIModel>().apply {
-            add(AccountDescUIModel("Register company to add own coupons"))//todo
-            add(AccountActionButtonUIModel("Register new company", null, ButtonAction.RegisterCompany))//todo
+            if (!haveCompanies) {
+                add(AccountDescUIModel("Register company to add own coupons"))//todo
+            }
+            add(
+                AccountActionButtonUIModel(
+                    "Register new company",
+                    null,
+                    ButtonAction.RegisterCompany
+                )
+            )//todo
         }
     }
 

@@ -9,6 +9,8 @@ import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUi
 import com.freebie.frieebiemobile.ui.company.presentation.model.ExternalLinkUiModel
 import com.freebie.frieebiemobile.ui.company.presentation.model.LinkUiType
 import com.freebie.frieebiemobile.ui.feed.domain.BookletStatus
+import com.freebie.frieebiemobile.ui.feed.models.CouponAdapterUiModel
+import com.freebie.frieebiemobile.ui.feed.models.CreateCoupon
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
 import com.freebie.frieebiemobile.ui.rate.presentation.mapper.RateUiMapper
 import javax.inject.Inject
@@ -27,9 +29,7 @@ class CompanyUiMapper @Inject constructor(
             avatar = companyModel.avatar,
             description = companyModel.description,
             rating = companyModel.rating.ratingScore,
-            coupons = couponGroup?.coupons?.map { couponModel ->
-                couponUiMapper.mapCoupon(couponModel)
-            } ?: emptyList(),
+            coupons = getCoupons(companyModel),
             booklets = bookletGroup?.booklets?.map {
                 OfferUI(it.id, it.avatar)
             } ?: emptyList(),
@@ -39,6 +39,28 @@ class CompanyUiMapper @Inject constructor(
             canRate = companyModel.rating.canRate,
             canModerate = true//TODO add logic to validate
         )
+    }
+
+    private fun getCoupons(companyModel: CompanyModel): List<CouponAdapterUiModel> {
+        val result = mutableListOf<CouponAdapterUiModel>()
+        val isAdmin = true //TODO add logic to validate
+
+//        val couponGroups: List<CouponsByGroupModel> = if (isAdmin) { //TODO как пагинировать разные купоны ?
+//            companyModel.coupons
+//        } else {
+//            val couponsByGroupActive = companyModel.coupons.findLast {
+//                it.statusCoupon == StatusCoupon.ACTIVE
+//            }
+//            mutableListOf<CouponsByGroupModel>().apply { couponsByGroupActive?.let(::add) }
+//        }
+        if (isAdmin) {
+            result.add(CreateCoupon())
+        }
+        val activeCoupons = companyModel.coupons.findLast {
+            it.statusCoupon == StatusCoupon.ACTIVE
+        }?.coupons?.map { couponUiMapper.mapCoupon(it) } ?: emptyList()
+        result.addAll(activeCoupons)
+        return result
     }
 
     private fun mapExternalLinks(linksList: List<ExternalCompanyLink>): List<ExternalLinkUiModel> {

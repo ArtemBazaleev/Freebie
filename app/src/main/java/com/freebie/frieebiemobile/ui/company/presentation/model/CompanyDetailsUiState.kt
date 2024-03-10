@@ -1,5 +1,6 @@
 package com.freebie.frieebiemobile.ui.company.presentation.model
 
+import com.freebie.frieebiemobile.ui.feed.models.CouponAdapterUiModel
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
 import com.freebie.frieebiemobile.ui.rate.presentation.model.UserRateUiModel
@@ -13,7 +14,7 @@ data class CompanyDetailsUiState(
     val showMoreComment: Boolean,
     val canRate: Boolean,
     val canModerate: Boolean,
-    val coupons: List<CouponUI> = emptyList(),
+    val coupons: List<CouponAdapterUiModel> = emptyList(),
     val booklets: List<OfferUI> = emptyList(),
     val externalLinks: List<ExternalLinkUiModel> = emptyList(),
     val rateList: List<UserRateUiModel> = emptyList()
