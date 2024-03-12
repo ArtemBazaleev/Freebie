@@ -3,6 +3,7 @@ package com.freebie.frieebiemobile.ui.company.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.network.NoInternetException
+import com.freebie.frieebiemobile.ui.account.domain.GetOwnLocalProfileUseCase
 import com.freebie.frieebiemobile.ui.account.domain.OwnUserProfileUseCase
 import com.freebie.frieebiemobile.ui.company.domain.usecase.GetCompanyDetailsUseCase
 import com.freebie.frieebiemobile.ui.company.presentation.mapper.CompanyUiMapper
@@ -29,6 +30,7 @@ class CompanyDetailsViewModel @Inject constructor(
     private val getCompanyDetailsUseCase: GetCompanyDetailsUseCase,
     private val couponsPagingHelper: CouponsCompanyPagingHelper,
     private val bookletPagingHelper: BookletsCompanyPagingHelper,
+    private val ownProfileUseCase: GetOwnLocalProfileUseCase,
     private val mapper: CompanyUiMapper
 ): ViewModel() {
 
@@ -47,10 +49,11 @@ class CompanyDetailsViewModel @Inject constructor(
         initPaging(companyId)
         requestCompanyInfoJob = viewModelScope.launch {
             _placeholderState.emit(null)
+            val ownProfile = ownProfileUseCase.getOwnLocalProfile()
             getCompanyDetailsUseCase.getCompanyInfo(companyId).onSuccess { companyModel ->
                 couponsPagingHelper.clear()
                 bookletPagingHelper.clear()
-                _state.emit(mapper.map(companyModel))
+                _state.emit(mapper.map(companyModel, ownProfile?.uid))
                 _placeholderState.emit(null)
             }.onFailure {
                 delay(100)

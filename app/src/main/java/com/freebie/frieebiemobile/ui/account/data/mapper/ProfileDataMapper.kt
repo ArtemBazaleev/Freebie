@@ -5,7 +5,8 @@ import com.freebie.frieebiemobile.ui.account.domain.ProfileModel
 import javax.inject.Inject
 
 class ProfileDataMapper @Inject constructor() {
-    fun mapToDomain(profile: ProfileEntity): ProfileModel {
+    fun mapToDomain(profile: ProfileEntity?): ProfileModel? {
+        if (profile == null) return null
         return ProfileModel(
             uid = profile.uid,
             firstName = profile.firstName,

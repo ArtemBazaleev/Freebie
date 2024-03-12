@@ -14,7 +14,7 @@ import javax.inject.Inject
 interface UserProfileStorage {
     fun getOwnProfileFlow(): Flow<ProfileModel>
     suspend fun updateOwnProfile(profile: ProfileModel)
-    suspend fun getOwnProfile(): ProfileModel
+    suspend fun getOwnProfile(): ProfileModel?
     suspend fun clear()
 }
 
@@ -29,6 +29,7 @@ class UserProfileStorageImpl @Inject constructor(
             .observeProfileById()
             .filterNotNull()
             .map(mapper::mapToDomain)
+            .filterNotNull()
     }
 
     override suspend fun updateOwnProfile(profile: ProfileModel) {

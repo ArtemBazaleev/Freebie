@@ -9,8 +9,10 @@ import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUi
 import com.freebie.frieebiemobile.ui.company.presentation.model.ExternalLinkUiModel
 import com.freebie.frieebiemobile.ui.company.presentation.model.LinkUiType
 import com.freebie.frieebiemobile.ui.feed.domain.BookletStatus
+import com.freebie.frieebiemobile.ui.feed.models.AddOfferUiModel
 import com.freebie.frieebiemobile.ui.feed.models.CouponAdapterUiModel
 import com.freebie.frieebiemobile.ui.feed.models.CreateCoupon
+import com.freebie.frieebiemobile.ui.feed.models.OfferAdapterUiModel
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
 import com.freebie.frieebiemobile.ui.rate.presentation.mapper.RateUiMapper
 import javax.inject.Inject
@@ -20,30 +22,37 @@ class CompanyUiMapper @Inject constructor(
     private val rateUiMapper: RateUiMapper
 ) {
 
-    fun map(companyModel: CompanyModel): CompanyDetailsUiState {
-        val couponGroup = companyModel.coupons.findLast { it.statusCoupon == StatusCoupon.ACTIVE }
-        val bookletGroup = companyModel.booklets.findLast { it.status == BookletStatus.ACTIVE }
+    fun map(companyModel: CompanyModel, myId: String?): CompanyDetailsUiState {
+        val isAdmin = myId == companyModel.creatorId
         return CompanyDetailsUiState(
             name = companyModel.name,
             companyId = companyModel.id,
             avatar = companyModel.avatar,
             description = companyModel.description,
             rating = companyModel.rating.ratingScore,
-            coupons = getCoupons(companyModel),
-            booklets = bookletGroup?.booklets?.map {
-                OfferUI(it.id, it.avatar)
-            } ?: emptyList(),
+            coupons = getCoupons(companyModel, isAdmin),
+            booklets = getBooklets(companyModel, isAdmin),
             externalLinks = mapExternalLinks(companyModel.linksList),
             rateList = companyModel.rateList.map(rateUiMapper::mapToUserRate),
             showMoreComment = companyModel.rating.reviewCount > companyModel.rateList.size,
             canRate = companyModel.rating.canRate,
-            canModerate = true//TODO add logic to validate
+            canModerate = isAdmin
         )
     }
 
-    private fun getCoupons(companyModel: CompanyModel): List<CouponAdapterUiModel> {
+    private fun getBooklets(companyModel: CompanyModel, isAdmin: Boolean): List<OfferAdapterUiModel> {
+        val result = mutableListOf<OfferAdapterUiModel>()
+        if (isAdmin) {
+            result.add(AddOfferUiModel())
+        } //TODO add group paging
+        val bookletGroup = companyModel.booklets.findLast { it.status == BookletStatus.ACTIVE }
+        val booklets = bookletGroup?.booklets?.map { OfferUI(it.id, it.avatar) } ?: emptyList()
+        result.addAll(booklets)
+        return result
+    }
+
+    private fun getCoupons(companyModel: CompanyModel, isAdmin: Boolean): List<CouponAdapterUiModel> {
         val result = mutableListOf<CouponAdapterUiModel>()
-        val isAdmin = true //TODO add logic to validate
 
 //        val couponGroups: List<CouponsByGroupModel> = if (isAdmin) { //TODO как пагинировать разные купоны ?
 //            companyModel.coupons

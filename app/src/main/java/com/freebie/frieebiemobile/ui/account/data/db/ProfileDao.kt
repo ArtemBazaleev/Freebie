@@ -14,7 +14,7 @@ interface ProfileDao {
     fun observeProfileById(): Flow<ProfileEntity>
 
     @Query("Select * from profileentity")
-    fun getProfile(): ProfileEntity
+    fun getProfile(): ProfileEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg users: ProfileEntity)

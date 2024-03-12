@@ -17,6 +17,7 @@ import com.freebie.frieebiemobile.databinding.FragmentCompanyBinding
 import com.freebie.frieebiemobile.deeplinks.DeepLinkHelperImpl
 import com.freebie.frieebiemobile.ui.company.presentation.adapter.ExternalLinkAdapter
 import com.freebie.frieebiemobile.ui.company.presentation.controllers.CouponController
+import com.freebie.frieebiemobile.ui.company.presentation.controllers.OffersController
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyDetailsUiState
 import com.freebie.frieebiemobile.ui.company.presentation.model.EMPTY_COMPANY_UI_STATE
 import com.freebie.frieebiemobile.ui.coupon.presentation.CouponDetailsFragment
@@ -53,7 +54,7 @@ class CompanyDetailsFragment : Fragment() {
 
     private val viewModel by viewModels<CompanyDetailsViewModel>()
     private var couponController: CouponController? = null
-    private var offersAdapter: OffersAdapter? = null
+    private var offersController: OffersController? = null
     private var externalLinksAdapter: ExternalLinkAdapter? = null
     private var rateAdapter: RateAdapter? = null
 
@@ -83,12 +84,11 @@ class CompanyDetailsFragment : Fragment() {
         couponController = CouponController(binding.couponsHeader, binding.rvCoupons) {
             openCouponDetails(it)
         }
-        offersAdapter = OffersAdapter()
+        offersController = OffersController()
         externalLinksAdapter = ExternalLinkAdapter {
             deepLinkHelper.openDeepLink(it.url)
         }
         rateAdapter = RateAdapter {}
-        binding.rvBooklets.adapter = offersAdapter
         binding.rvExternalLinks.adapter = externalLinksAdapter
         binding.rvRate.adapter = rateAdapter
         initPaging()
@@ -105,14 +105,7 @@ class CompanyDetailsFragment : Fragment() {
 
     private fun initPaging() {
         couponController?.initPaging(viewModel.getCouponsPagingCallback())
-
-        binding.rvBooklets.addOnScrollListener(
-            RecyclerPaginationUtil(
-                binding.rvBooklets.layoutManager as LinearLayoutManager,
-                viewModel.getBookletsPagingCallback(),
-                threshHold = 5
-            )
-        )
+        offersController?.initPaging(viewModel.getBookletsPagingCallback())
     }
 
     private fun observeState() {
@@ -154,7 +147,7 @@ class CompanyDetailsFragment : Fragment() {
         }
         binding.aboutDesc.text = state.description
         Glide.with(requireContext()).load(state.avatar).into(binding.ivCompanyImage)
-        offersAdapter?.submitList(state.booklets)
+        offersController?.handleState(state)
         couponController?.handleState(state)
         externalLinksAdapter?.submitList(state.externalLinks)
         rateAdapter?.submitList(state.rateList)
@@ -187,7 +180,7 @@ class CompanyDetailsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         couponController = null
-        offersAdapter = null
+        offersController = null
         externalLinksAdapter = null
         rateAdapter = null
     }

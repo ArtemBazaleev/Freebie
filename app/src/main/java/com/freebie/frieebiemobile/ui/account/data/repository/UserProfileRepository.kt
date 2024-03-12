@@ -7,10 +7,17 @@ import javax.inject.Inject
 
 interface UserProfileRepository {
     fun getOwnProfileFlow(): Flow<ProfileModel> //TODO add getOwnProfile model
+
+
+    suspend fun getOwnLocalProfile(): ProfileModel?
 }
 
 class UserProfileRepositoryImpl @Inject constructor(
     private val storage: UserProfileStorage
 ): UserProfileRepository {
     override fun getOwnProfileFlow() = storage.getOwnProfileFlow()
+
+    override suspend fun getOwnLocalProfile(): ProfileModel? {
+        return storage.getOwnProfile()
+    }
 }
