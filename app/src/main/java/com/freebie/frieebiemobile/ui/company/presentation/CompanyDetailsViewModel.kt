@@ -14,6 +14,7 @@ import com.freebie.frieebiemobile.ui.company.presentation.paging.CouponsCompanyP
 import com.freebie.frieebiemobile.ui.coupon.domain.GetCouponsByCompanyUseCase
 import com.freebie.frieebiemobile.ui.feed.models.CouponAdapterUiModel
 import com.freebie.frieebiemobile.ui.feed.models.CouponUI
+import com.freebie.frieebiemobile.ui.feed.models.OfferAdapterUiModel
 import com.freebie.frieebiemobile.ui.feed.models.OfferUI
 import com.freebie.frieebiemobile.ui.utils.PaginationCallback
 import com.freebie.frieebiemobile.ui.utils.PlaceHolderState
@@ -75,7 +76,7 @@ class CompanyDetailsViewModel @Inject constructor(
 
         bookletPagingHelper.init(viewModelScope, companyId) { booklets ->
             val state = _state.value
-            val bookletsList = mutableListOf<OfferUI>().apply {
+            val bookletsList = mutableListOf<OfferAdapterUiModel>().apply {
                 addAll(_state.value.booklets)
                 addAll(booklets)
             }

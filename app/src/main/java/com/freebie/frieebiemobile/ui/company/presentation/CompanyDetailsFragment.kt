@@ -84,7 +84,9 @@ class CompanyDetailsFragment : Fragment() {
         couponController = CouponController(binding.couponsHeader, binding.rvCoupons) {
             openCouponDetails(it)
         }
-        offersController = OffersController()
+        offersController = OffersController(binding.bookletHeader, binding.rvBooklets) {
+
+        }
         externalLinksAdapter = ExternalLinkAdapter {
             deepLinkHelper.openDeepLink(it.url)
         }

@@ -11,6 +11,7 @@ import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
 import com.freebie.frieebiemobile.ui.company.domain.model.Locale
 import com.freebie.frieebiemobile.ui.company.domain.usecase.CreateCompanyUseCase
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationUiModel
+import com.freebie.frieebiemobile.ui.company.presentation.model.CreateCompanyFieldError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -60,13 +61,16 @@ class CreateCompanyViewModel @Inject constructor(
 
     fun addLocale(langCode: String, description: String, name: String) {
         locales[langCode] = Locale(langCode, description, name)
+        areFieldsFilled()
     }
 
     fun setCategory(name: String) {
+        areFieldsFilled()
         currentCategoryId = _state.value.categories.findLast { it.name == name }?.id
     }
 
     fun setCity(name: String) {
+        areFieldsFilled()
         city = name
     }
 
@@ -100,6 +104,23 @@ class CreateCompanyViewModel @Inject constructor(
 
     private fun areFieldsFilled(): Boolean {
         val isLocalesFilled = locales.values.none { !it.isFilled() }
+        val isEmptyCategory = currentCategoryId == null
+        val errorCategory = if (isEmptyCategory) CreateCompanyFieldError.FIELD_EMPTY else null
+        locales.values.firstOrNull()?.let { locale ->
+            val isNameFiled = locale.name.isNotEmpty()
+            val isDescriptionFilled = locale.description.isNotEmpty()
+            _state.tryEmit(_state.value.copy(
+                errorCompanyName = if (isNameFiled) null else CreateCompanyFieldError.FIELD_EMPTY,
+                errorDescription = if (isDescriptionFilled) null else CreateCompanyFieldError.FIELD_EMPTY,
+                errorCategory = errorCategory
+            ))
+        } ?: run {
+            _state.tryEmit(_state.value.copy(
+                errorCompanyName = CreateCompanyFieldError.FIELD_EMPTY,
+                errorDescription = CreateCompanyFieldError.FIELD_EMPTY,
+                errorCategory = errorCategory
+            ))
+        }
         return isLocalesFilled && currentCategoryId != null
     }
 }

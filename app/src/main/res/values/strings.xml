@@ -48,4 +48,6 @@
     <string name="enter_company_name">Enter company name</string>
     <string name="enter_descriptions">Enter descriptions</string>
     <string name="select_category">Select category</string>
+    <string name="field_empty">Field is empty</string>
+    <string name="telegram_link">Telegram link</string>
 </resources>
