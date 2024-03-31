@@ -10,12 +10,16 @@ import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
 import com.freebie.frieebiemobile.ui.company.domain.model.Locale
 import com.freebie.frieebiemobile.ui.company.domain.usecase.CreateCompanyUseCase
+import com.freebie.frieebiemobile.ui.company.domain.usecase.UpdateCompanyUseCase
+import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationEvent
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationUiModel
 import com.freebie.frieebiemobile.ui.company.presentation.model.CreateCompanyFieldError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -24,10 +28,12 @@ import javax.inject.Inject
 class CreateCompanyViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoryRepositoryUseCase,
     private val createCompany: CreateCompanyUseCase,
+    private val updateCompany: UpdateCompanyUseCase,
     private val mapper: CategoryMapper
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CompanyCreationUiModel(emptyList(), emptyList()))
+    private val _events = Channel<CompanyCreationEvent>(Channel.BUFFERED)
 
     private val locales = ConcurrentHashMap<String, Locale>()
     private val links = ConcurrentHashMap<ExternalLinkType, ExternalCompanyLink>()
@@ -36,6 +42,9 @@ class CreateCompanyViewModel @Inject constructor(
 
     val state: Flow<CompanyCreationUiModel>
         get() = _state
+
+    val events: Flow<CompanyCreationEvent>
+        get() = _events.receiveAsFlow()
 
     init {
         requestCategories()
@@ -80,7 +89,7 @@ class CreateCompanyViewModel @Inject constructor(
 
     fun createCompany() {
         if (areFieldsFilled()) {
-            Log.d("CreateCompanyViewModel",  "start company creation")
+            Log.d("CreateCompanyViewModel", "start company creation")
             viewModelScope.launch {
                 createCompany.createCompany(
                     CompanyCreationParams(
@@ -91,14 +100,15 @@ class CreateCompanyViewModel @Inject constructor(
                         city = city!!
                     )
                 ).onSuccess {
-                    Log.d("CreateCompanyViewModel",  "Company created !!")
+                    _events.trySend(CompanyCreationEvent.CloseSelf)
+                    Log.d("CreateCompanyViewModel", "Company created !!")
                 }.onFailure {
-                    it.printStackTrace()
+                    _events.trySend(CompanyCreationEvent.ErrorWhileCreatingCompany)
                     Log.e("CreateCompanyViewModel", it.message ?: "")
                 }
             }
         } else {
-            Log.d("CreateCompanyViewModel",  "areFieldsFilled = false")
+            Log.d("CreateCompanyViewModel", "areFieldsFilled = false")
         }
     }
 
@@ -109,18 +119,23 @@ class CreateCompanyViewModel @Inject constructor(
         locales.values.firstOrNull()?.let { locale ->
             val isNameFiled = locale.name.isNotEmpty()
             val isDescriptionFilled = locale.description.isNotEmpty()
-            _state.tryEmit(_state.value.copy(
-                errorCompanyName = if (isNameFiled) null else CreateCompanyFieldError.FIELD_EMPTY,
-                errorDescription = if (isDescriptionFilled) null else CreateCompanyFieldError.FIELD_EMPTY,
-                errorCategory = errorCategory
-            ))
+            _state.tryEmit(
+                _state.value.copy(
+                    errorCompanyName = if (isNameFiled) null else CreateCompanyFieldError.FIELD_EMPTY,
+                    errorDescription = if (isDescriptionFilled) null else CreateCompanyFieldError.FIELD_EMPTY,
+                    errorCategory = errorCategory
+                )
+            )
         } ?: run {
-            _state.tryEmit(_state.value.copy(
-                errorCompanyName = CreateCompanyFieldError.FIELD_EMPTY,
-                errorDescription = CreateCompanyFieldError.FIELD_EMPTY,
-                errorCategory = errorCategory
-            ))
+            _state.tryEmit(
+                _state.value.copy(
+                    errorCompanyName = CreateCompanyFieldError.FIELD_EMPTY,
+                    errorDescription = CreateCompanyFieldError.FIELD_EMPTY,
+                    errorCategory = errorCategory
+                )
+            )
         }
         return isLocalesFilled && currentCategoryId != null
     }
+
 }

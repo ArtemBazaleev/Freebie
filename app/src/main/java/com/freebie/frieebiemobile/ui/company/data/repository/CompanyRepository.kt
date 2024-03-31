@@ -10,6 +10,8 @@ interface CompanyRepository {
     suspend fun companyById(companyId: String): Result<CompanyModel>
 
     suspend fun createCompany(companyCreationParams: CompanyCreationParams): Result<String>
+
+    suspend fun updateCompany(params: CompanyCreationParams) : Result<String>
 }
 
 class CompanyRepositoryImpl @Inject constructor(
@@ -30,6 +32,10 @@ class CompanyRepositoryImpl @Inject constructor(
 
     override suspend fun createCompany(companyCreationParams: CompanyCreationParams): Result<String> {
         return api.createCompany(companyCreationParams).map { it.companyId }
+    }
+
+    override suspend fun updateCompany(params: CompanyCreationParams): Result<String> {
+        return api.updateCompany(params).map { it.companyId }
     }
 
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +16,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentCreateCompanyBinding
 import com.freebie.frieebiemobile.network.DEFAULT_LOCALE
+import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
+import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
+import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationEvent
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -38,16 +42,32 @@ class CreateCompanyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeState()
+        observeEvents()
         binding.createCompany.setOnClickListener {
             viewModel.createCompany()
         }
+        addTextListeners()
+    }
 
+    private fun addTextListeners() {
         binding.etCompanyDescription.doAfterTextChanged { text: Editable? ->
             addLocale()
         }
 
         binding.etCompanyName.doAfterTextChanged {
             addLocale()
+        }
+
+        binding.include.etTelegram.doAfterTextChanged {
+            viewModel.addLink(ExternalCompanyLink(it.toString(), ExternalLinkType.TELEGRAM))
+        }
+
+        binding.include.etInstagram.doAfterTextChanged {
+            viewModel.addLink(ExternalCompanyLink(it.toString(), ExternalLinkType.INSTAGRAM))
+        }
+
+        binding.include.etWhatsapp.doAfterTextChanged {
+            viewModel.addLink(ExternalCompanyLink(it.toString(), ExternalLinkType.WHATSAPP))
         }
     }
 
@@ -62,6 +82,25 @@ class CreateCompanyFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::handleState)
             }
+        }
+    }
+
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collect(::handleEvents)
+            }
+        }
+    }
+
+    private fun handleEvents(event: CompanyCreationEvent) {
+        when(event) {
+            CompanyCreationEvent.CloseSelf -> activity?.onBackPressedDispatcher?.onBackPressed()
+            CompanyCreationEvent.ErrorWhileCreatingCompany -> Toast.makeText(
+                requireContext(),
+                "Error while creating company",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -116,5 +155,14 @@ class CreateCompanyFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+
+
+        fun newInstance(): Fragment {
+
+            return CreateCompanyFragment()
+        }
     }
 }

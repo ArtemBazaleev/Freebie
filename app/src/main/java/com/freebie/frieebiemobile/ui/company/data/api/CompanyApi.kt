@@ -11,12 +11,13 @@ import com.freebie.protos.CompanyModelProtos
 import com.freebie.protos.CompanyModelProtos.Link
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
+import kotlin.IllegalArgumentException
 
 interface CompanyApi {
     suspend fun getCompanyInfo(companyId: String): Result<CompanyApiProtos.CompanyDataResponse>
     suspend fun createCompany(companyCreationParams: CompanyCreationParams): Result<CompanyApiProtos.CreateCompanyResponse>
+    suspend fun updateCompany(companyCreationParams: CompanyCreationParams): Result<CompanyApiProtos.CreateCompanyResponse>
 }
 
 class CompanyApiImpl @Inject constructor(
@@ -43,34 +44,38 @@ class CompanyApiImpl @Inject constructor(
             }
         }
 
+    private fun createRequestProto(companyCreationParams: CompanyCreationParams) : CompanyApiProtos.CreateCompanyRequest {
+        return CompanyApiProtos
+            .CreateCompanyRequest
+            .newBuilder()
+            .apply {
+                companyCreationParams.links.forEach { companyLink ->
+                    addLinks(
+                        Link.newBuilder()
+                            .setType(mapLink(companyLink.type))
+                            .setUrl(companyLink.url)
+                            .build()
+                    )
+                }
+                companyCreationParams.avatar?.let { avatarUrl = it }
+                city = companyCreationParams.city
+                categoryId = companyCreationParams.categoryId
+                companyCreationParams.locale.forEach { loc ->
+                    addLocales(
+                        Locale.newBuilder()
+                            .setLocale(loc.langCode)
+                            .setDescription(loc.description)
+                            .setName(loc.name)
+                            .build()
+                    )
+                }
+            }
+            .build()
+    }
+
     override suspend fun createCompany(companyCreationParams: CompanyCreationParams) = runCatching {
         withContext(Dispatchers.IO) {
-            val companyRequest = CompanyApiProtos
-                .CreateCompanyRequest
-                .newBuilder()
-                .apply {
-                    companyCreationParams.links.forEach { companyLink ->
-                        addLinks(
-                            Link.newBuilder()
-                                .setType(mapLink(companyLink.type))
-                                .setUrl(companyLink.url)
-                                .build()
-                        )
-                    }
-                    companyCreationParams.avatar?.let { avatarUrl = it }
-                    city = companyCreationParams.city
-                    categoryId = companyCreationParams.categoryId
-                    companyCreationParams.locale.forEach { loc ->
-                        addLocales(
-                            Locale.newBuilder()
-                                .setLocale(loc.langCode)
-                                .setDescription(loc.description)
-                                .setName(loc.name)
-                                .build()
-                        )
-                    }
-                }
-                .build()
+            val companyRequest = createRequestProto(companyCreationParams)
             Log.d("CreateCompanyViewModel",  "start company creation api $companyRequest")
             val response = httpAccess.httpRequest(
                 requestUrlSegment = CREATE_COMPANY,
@@ -83,6 +88,24 @@ class CompanyApiImpl @Inject constructor(
                 .parseFrom(response.bodyAsArray)
             else if (response.code == 400) throw IllegalArgumentException("company already exist")
             else error("error while creating company")
+        }
+    }
+
+    override suspend fun updateCompany(
+        companyCreationParams: CompanyCreationParams
+    ): Result<CompanyApiProtos.CreateCompanyResponse> = runCatching {
+        withContext(Dispatchers.IO) {
+            val request = createRequestProto(companyCreationParams)
+            val response = httpAccess.httpRequest(
+                requestUrlSegment = CREATE_COMPANY,
+                method = Method.PUT,
+                body = request.toByteArray()
+            )
+            if (response.isSuccess) return@withContext CompanyApiProtos
+                .CreateCompanyResponse
+                .parseFrom(response.bodyAsArray)
+            else if (response.code == 400) throw IllegalArgumentException("company already exist")
+            else error("error while updating company")
         }
     }
 
