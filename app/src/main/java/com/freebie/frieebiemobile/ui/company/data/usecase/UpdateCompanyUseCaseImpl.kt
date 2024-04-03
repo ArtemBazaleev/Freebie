@@ -8,7 +8,8 @@ import javax.inject.Inject
 class UpdateCompanyUseCaseImpl @Inject constructor(
     private val repository: CompanyRepository
 ): UpdateCompanyUseCase {
-    override suspend fun updateCompany(params: CompanyCreationParams): Result<String> {
-        return repository.updateCompany(params)
+    override suspend fun updateCompany(params: CompanyCreationParams,
+                                       companyId: String): Result<String> {
+        return repository.updateCompany(params, companyId)
     }
 }

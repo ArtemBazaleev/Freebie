@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_navigation_company_details_to_navigation_company_reviews2"
             app:destination="@id/navigation_company_reviews" />
+        <action
+            android:id="@+id/action_navigation_company_details_to_navigation_company_create"
+            app:destination="@id/navigation_company_create" />
 
     </fragment>
 

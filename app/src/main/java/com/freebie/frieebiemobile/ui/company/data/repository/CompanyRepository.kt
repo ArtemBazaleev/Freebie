@@ -3,6 +3,7 @@ package com.freebie.frieebiemobile.ui.company.data.repository
 import com.freebie.frieebiemobile.ui.company.data.api.CompanyApi
 import com.freebie.frieebiemobile.ui.company.data.mapper.CompanyDomainMapper
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyCreationParams
+import com.freebie.frieebiemobile.ui.company.domain.model.CompanyEditModel
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyModel
 import javax.inject.Inject
 
@@ -11,7 +12,10 @@ interface CompanyRepository {
 
     suspend fun createCompany(companyCreationParams: CompanyCreationParams): Result<String>
 
-    suspend fun updateCompany(params: CompanyCreationParams) : Result<String>
+    suspend fun updateCompany(params: CompanyCreationParams,
+                              companyId: String) : Result<String>
+
+    suspend fun getEditCompanyInfo(companyId: String): Result<CompanyEditModel>
 }
 
 class CompanyRepositoryImpl @Inject constructor(
@@ -34,8 +38,13 @@ class CompanyRepositoryImpl @Inject constructor(
         return api.createCompany(companyCreationParams).map { it.companyId }
     }
 
-    override suspend fun updateCompany(params: CompanyCreationParams): Result<String> {
-        return api.updateCompany(params).map { it.companyId }
+    override suspend fun updateCompany(params: CompanyCreationParams,
+                                       companyId: String): Result<String> {
+        return api.updateCompany(params, companyId).map { it.companyId }
+    }
+
+    override suspend fun getEditCompanyInfo(companyId: String): Result<CompanyEditModel> {
+        return api.getCompanyEditInfo(companyId).map { mapper.mapCompanyEditInfo(it, companyId) }
     }
 
 }

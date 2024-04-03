@@ -3,6 +3,7 @@ package com.freebie.frieebiemobile.ui.company.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.freebie.frieebiemobile.ui.category.domain.model.CategoryModel
 import com.freebie.frieebiemobile.ui.category.domain.usecase.GetCategoryRepositoryUseCase
 import com.freebie.frieebiemobile.ui.category.mapper.CategoryMapper
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyCreationParams
@@ -10,6 +11,7 @@ import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
 import com.freebie.frieebiemobile.ui.company.domain.model.Locale
 import com.freebie.frieebiemobile.ui.company.domain.usecase.CreateCompanyUseCase
+import com.freebie.frieebiemobile.ui.company.domain.usecase.GetEditCompanyInfoUseCase
 import com.freebie.frieebiemobile.ui.company.domain.usecase.UpdateCompanyUseCase
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationEvent
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationUiModel
@@ -29,6 +31,7 @@ class CreateCompanyViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoryRepositoryUseCase,
     private val createCompany: CreateCompanyUseCase,
     private val updateCompany: UpdateCompanyUseCase,
+    private val getEditCompanyInfo: GetEditCompanyInfoUseCase,
     private val mapper: CategoryMapper
 ) : ViewModel() {
 
@@ -40,32 +43,23 @@ class CreateCompanyViewModel @Inject constructor(
     private var currentCategoryId: String? = null
     private var city: String? = null
 
+    // if companyId then update
+    @Volatile
+    private var companyId: String? = null
+
     val state: Flow<CompanyCreationUiModel>
         get() = _state
 
     val events: Flow<CompanyCreationEvent>
         get() = _events.receiveAsFlow()
 
-    init {
-        requestCategories()
-    }
-
-    private fun requestCategories() {
-        viewModelScope.launch(Dispatchers.Default) {
-            getCategoriesUseCase
-                .invoke()
-                .onSuccess { categories ->
-                    _state.emit(
-                        CompanyCreationUiModel(
-                            categories = categories.map(mapper::mapToUi),
-                            cities = listOf("Limassol", "Nikosia", "Pafos", "Lefkosia", "Ayia Napa")
-                        )
-                    )
-                }
-                .onFailure {
-                    Log.d("CreateCompanyViewModel", it.message ?: "")
-                }
-        }
+    private suspend fun handleCategories(categories: List<CategoryModel>) {
+        _state.emit(
+            CompanyCreationUiModel(
+                categories = categories.map(mapper::mapToUi),
+                cities = listOf("Limassol", "Nikosia", "Pafos", "Lefkosia", "Ayia Napa")
+            )
+        )
     }
 
     fun addLocale(langCode: String, description: String, name: String) {
@@ -87,19 +81,21 @@ class CreateCompanyViewModel @Inject constructor(
         links[link.type] = link
     }
 
-    fun createCompany() {
+    fun createUpdateCompany() {
         if (areFieldsFilled()) {
             Log.d("CreateCompanyViewModel", "start company creation")
             viewModelScope.launch {
-                createCompany.createCompany(
-                    CompanyCreationParams(
-                        categoryId = currentCategoryId!!,
-                        avatar = null,
-                        locale = locales.values.toList(),
-                        links = links.values.toList(),
-                        city = city!!
-                    )
-                ).onSuccess {
+                val params = CompanyCreationParams(
+                    categoryId = currentCategoryId!!,
+                    avatar = null,
+                    locale = locales.values.toList(),
+                    links = links.values.toList(),
+                    city = city!!
+                )
+                val result = if (companyId == null)
+                    createCompany.createCompany(params)
+                else updateCompany.updateCompany(params, companyId!!)
+                result.onSuccess {
                     _events.trySend(CompanyCreationEvent.CloseSelf)
                     Log.d("CreateCompanyViewModel", "Company created !!")
                 }.onFailure {
@@ -138,4 +134,54 @@ class CreateCompanyViewModel @Inject constructor(
         return isLocalesFilled && currentCategoryId != null
     }
 
+    fun setCompanyId(companyId: String?) {
+        Log.d(
+            "CreateCompanyViewModel",
+            "setCompanyId = $companyId"
+        )
+        viewModelScope.launch(Dispatchers.Default) {
+            val categories = getCategoriesUseCase.invoke().getOrNull()
+            categories?.let { handleCategories(it) } ?: run {
+                //TODO show error
+                Log.d(
+                    "CreateCompanyViewModel",
+                    "error while getting categories"
+                )
+            }
+            if (companyId.isNullOrEmpty()) {
+                return@launch
+            }
+            this@CreateCompanyViewModel.companyId = companyId
+            if (categories.isNullOrEmpty()) return@launch
+
+            getEditCompanyInfo
+                .getEditCompanyInfo(companyId)
+                .onSuccess { model ->
+                    Log.d(
+                        "CreateCompanyViewModel",
+                        "success ${model}"
+                    )
+                    this@CreateCompanyViewModel.city = model.city
+                    this@CreateCompanyViewModel.currentCategoryId = model.categoryId
+                    _events.send(
+                        CompanyCreationEvent.CompanyInfoReceived(
+                            model.copy(
+                                categoryName = categories.findLast {
+                                    it.categoryId == model.categoryId
+                                }?.categoryName ?: ""
+                            )
+                        )
+                    )
+                }
+                .onFailure {
+                    Log.d(
+                        "CreateCompanyViewModel",
+                        "getEditCompanyInfo error ${it.message}"
+                    )
+                    //TODO show error
+                }
+
+        }
+
+    }
 }

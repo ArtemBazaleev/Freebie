@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentCreateCompanyBinding
 import com.freebie.frieebiemobile.network.DEFAULT_LOCALE
+import com.freebie.frieebiemobile.ui.company.domain.model.CompanyEditModel
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationEvent
@@ -41,10 +42,11 @@ class CreateCompanyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setCompanyId(arguments?.getString(COMPANY_ID))
         observeState()
         observeEvents()
         binding.createCompany.setOnClickListener {
-            viewModel.createCompany()
+            viewModel.createUpdateCompany()
         }
         addTextListeners()
     }
@@ -101,6 +103,31 @@ class CreateCompanyFragment : Fragment() {
                 "Error while creating company",
                 Toast.LENGTH_SHORT
             ).show()
+
+            is CompanyCreationEvent.CompanyInfoReceived -> updateFields(event.model)
+            CompanyCreationEvent.ErrorWhileGettingCompanyInfo -> Toast.makeText(
+                requireContext(),
+                "Error while getting company info",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun updateFields(model: CompanyEditModel) {
+        val name = model.locale.firstOrNull()?.name ?: ""
+        val description = model.locale.firstOrNull()?.description ?: ""
+        binding.etCompanyName.setText(name)
+        binding.etCompanyDescription.setText(description)
+        binding.cityAutoComplete.setText(model.city)
+        binding.categoryAutoComplete.setText(model.categoryName)
+        model.links.findLast { it.type == ExternalLinkType.WHATSAPP }?.let {
+            binding.include.etWhatsapp.setText(it.url)
+        }
+        model.links.findLast { it.type == ExternalLinkType.TELEGRAM }?.let {
+            binding.include.etTelegram.setText(it.url)
+        }
+        model.links.findLast { it.type == ExternalLinkType.INSTAGRAM }?.let {
+            binding.include.etInstagram.setText(it.url)
         }
     }
 
@@ -159,10 +186,15 @@ class CreateCompanyFragment : Fragment() {
 
     companion object {
 
+        const val COMPANY_ID = "company_id"
 
-        fun newInstance(): Fragment {
-
-            return CreateCompanyFragment()
+        fun newInstance(companyId: String?): Fragment {
+            val bundle = Bundle().apply {
+                companyId?.let { putString(COMPANY_ID, it) }
+            }
+            return CreateCompanyFragment().apply {
+                arguments = bundle
+            }
         }
     }
 }

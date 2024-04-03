@@ -46,6 +46,20 @@
                 android:layout_marginBottom="0dp"
                 android:background="@drawable/avatar_gradient_bottom" />
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/editCompany"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end"
+                android:visibility="gone"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_marginTop="@dimen/default_top_margin"
+                android:layout_marginEnd="@dimen/default_side_margin"
+                android:tint="@color/white"
+                android:padding="4dp"
+                app:srcCompat="@drawable/baseline_edit_24"/>
+
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/company_name"
                 style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
@@ -53,6 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="@dimen/default_side_margin"
+                android:layout_marginEnd="@dimen/default_side_margin"
                 android:layout_marginBottom="@dimen/default_bottom_margin_l"
                 android:ellipsize="end"
                 android:maxLines="2"

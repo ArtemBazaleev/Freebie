@@ -17,6 +17,16 @@ class CompanyModel(
     val rateList: List<RateModel>
 )
 
+data class CompanyEditModel(
+    val companyId: String,
+    val categoryId: String,
+    val categoryName: String = "",
+    val avatar: String?,
+    val locale: List<Locale>,
+    val links: List<ExternalCompanyLink>,
+    val city: String
+)
+
 class RatingInfoModel(
     val ratingScore: Double,
     val canRate: Boolean,

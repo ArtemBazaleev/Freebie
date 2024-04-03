@@ -6,9 +6,11 @@ import com.freebie.frieebiemobile.ui.company.data.repository.CompanyRepository
 import com.freebie.frieebiemobile.ui.company.data.repository.CompanyRepositoryImpl
 import com.freebie.frieebiemobile.ui.company.data.usecase.CreateCompanyUseCaseImpl
 import com.freebie.frieebiemobile.ui.company.data.usecase.GetCompanyDetailsUseCaseImpl
+import com.freebie.frieebiemobile.ui.company.data.usecase.GetEditCompanyInfoUseCaseImpl
 import com.freebie.frieebiemobile.ui.company.data.usecase.UpdateCompanyUseCaseImpl
 import com.freebie.frieebiemobile.ui.company.domain.usecase.CreateCompanyUseCase
 import com.freebie.frieebiemobile.ui.company.domain.usecase.GetCompanyDetailsUseCase
+import com.freebie.frieebiemobile.ui.company.domain.usecase.GetEditCompanyInfoUseCase
 import com.freebie.frieebiemobile.ui.company.domain.usecase.UpdateCompanyUseCase
 import dagger.Binds
 import dagger.Module
@@ -33,4 +35,7 @@ interface CompanyDataModule {
 
     @Binds
     fun bindUpdateCompanyUseCase(impl: UpdateCompanyUseCaseImpl): UpdateCompanyUseCase
+
+    @Binds
+    fun bindGetEditCompanyInfoUseCase(impl: GetEditCompanyInfoUseCaseImpl): GetEditCompanyInfoUseCase
 }

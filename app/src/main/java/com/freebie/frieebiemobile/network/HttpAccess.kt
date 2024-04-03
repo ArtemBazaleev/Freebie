@@ -22,7 +22,7 @@ interface HttpAccess {
 }
 
 enum class Method(val strValue: String) {
-    POST("POST"), GET("GET"), PUT("PUT")
+    POST("POST"), GET("GET"), PUT("PUT"), PATCH("PATCH")
 }
 
 class HttpResponse(

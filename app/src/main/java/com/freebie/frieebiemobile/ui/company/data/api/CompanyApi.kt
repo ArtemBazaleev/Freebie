@@ -1,5 +1,6 @@
 package com.freebie.frieebiemobile.ui.company.data.api
 
+import android.net.Uri
 import android.util.Log
 import com.freebie.frieebiemobile.network.HttpAccess
 import com.freebie.frieebiemobile.network.Method
@@ -17,7 +18,9 @@ import kotlin.IllegalArgumentException
 interface CompanyApi {
     suspend fun getCompanyInfo(companyId: String): Result<CompanyApiProtos.CompanyDataResponse>
     suspend fun createCompany(companyCreationParams: CompanyCreationParams): Result<CompanyApiProtos.CreateCompanyResponse>
-    suspend fun updateCompany(companyCreationParams: CompanyCreationParams): Result<CompanyApiProtos.CreateCompanyResponse>
+    suspend fun updateCompany(companyCreationParams: CompanyCreationParams,
+                              companyId: String): Result<CompanyApiProtos.CreateCompanyResponse>
+    suspend fun getCompanyEditInfo(companyId: String): Result<CompanyApiProtos.CompanyEditResponse>
 }
 
 class CompanyApiImpl @Inject constructor(
@@ -76,13 +79,11 @@ class CompanyApiImpl @Inject constructor(
     override suspend fun createCompany(companyCreationParams: CompanyCreationParams) = runCatching {
         withContext(Dispatchers.IO) {
             val companyRequest = createRequestProto(companyCreationParams)
-            Log.d("CreateCompanyViewModel",  "start company creation api $companyRequest")
             val response = httpAccess.httpRequest(
                 requestUrlSegment = CREATE_COMPANY,
                 method = Method.POST,
                 body = companyRequest.toByteArray(),
             )
-            Log.d("CreateCompanyViewModel",  "response code = ${response.code}")
             if (response.isSuccess) return@withContext CompanyApiProtos
                 .CreateCompanyResponse
                 .parseFrom(response.bodyAsArray)
@@ -92,20 +93,36 @@ class CompanyApiImpl @Inject constructor(
     }
 
     override suspend fun updateCompany(
-        companyCreationParams: CompanyCreationParams
+        companyCreationParams: CompanyCreationParams,
+        companyId: String
     ): Result<CompanyApiProtos.CreateCompanyResponse> = runCatching {
         withContext(Dispatchers.IO) {
             val request = createRequestProto(companyCreationParams)
             val response = httpAccess.httpRequest(
-                requestUrlSegment = CREATE_COMPANY,
-                method = Method.PUT,
+                requestUrlSegment = "$CREATE_COMPANY/$companyId",
+                method = Method.PATCH,
                 body = request.toByteArray()
             )
             if (response.isSuccess) return@withContext CompanyApiProtos
                 .CreateCompanyResponse
                 .parseFrom(response.bodyAsArray)
-            else if (response.code == 400) throw IllegalArgumentException("company already exist")
-            else error("error while updating company")
+            else if (response.code == 400) throw IllegalArgumentException("company already exist can not patch")
+            else error("error while updating company code = ${response.code}")
+        }
+    }
+
+    override suspend fun getCompanyEditInfo(
+        companyId: String
+    ): Result<CompanyApiProtos.CompanyEditResponse> = runCatching {
+        withContext(Dispatchers.IO) {
+            val response = httpAccess.httpRequest(
+                requestUrlSegment = "$GET_COMPANY_EDIT_INFO/$companyId/edit",
+                method = Method.GET
+            )
+            if (response.isSuccess) return@withContext CompanyApiProtos
+                .CompanyEditResponse
+                .parseFrom(response.bodyAsArray)
+            else error("error while getting company edit info code = ${response.code}, \"$GET_COMPANY_EDIT_INFO/$companyId/edit\"")
         }
     }
 
@@ -119,6 +136,7 @@ class CompanyApiImpl @Inject constructor(
 
     companion object {
         private const val GET_COMPANY_INFO = "v1/companies/company-data"
+        private const val GET_COMPANY_EDIT_INFO = "v1/companies"
         private const val CREATE_COMPANY = "v1/companies"
     }
 }

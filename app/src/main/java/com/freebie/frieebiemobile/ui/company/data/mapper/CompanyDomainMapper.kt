@@ -1,9 +1,11 @@
 package com.freebie.frieebiemobile.ui.company.data.mapper
 
 import com.freebie.frieebiemobile.ui.account.data.mapper.CouponsDataMapperImpl
+import com.freebie.frieebiemobile.ui.company.domain.model.CompanyEditModel
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyModel
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
+import com.freebie.frieebiemobile.ui.company.domain.model.Locale
 import com.freebie.frieebiemobile.ui.company.domain.model.RatingInfoModel
 import com.freebie.frieebiemobile.ui.rate.domain.RateModel
 import com.freebie.protos.CompanyApiProtos
@@ -65,5 +67,25 @@ class CompanyDomainMapper @Inject constructor(
             }
         }
         return result
+    }
+
+    fun mapCompanyEditInfo(
+        proto: CompanyApiProtos.CompanyEditResponse,
+        companyId: String
+    ): CompanyEditModel {
+        return CompanyEditModel(
+            categoryId = proto.categoryId,
+            companyId = companyId,
+            avatar = proto.avatarUrl,
+            city = proto.city,
+            locale = proto.localesList.map { locale ->
+                Locale(
+                    langCode = locale.locale,
+                    description = locale.description,
+                    name = locale.name
+                )
+            },
+            links = mapLinksList(proto.linksList),
+        )
     }
 }

@@ -46,7 +46,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = api.auth(token).getOrThrow()
             saveTokenToPreferences(response.first)
             val profile = ProfileModel(
-                uid = response.second.userId,
+                uid = response.second.encryptedId,
                 firstName = response.second.name,
                 lastName = response.second.familyName,
                 avatar = response.second.pictureUrl,

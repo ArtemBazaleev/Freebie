@@ -176,6 +176,20 @@ class CompanyDetailsFragment : Fragment() {
         if (state.rating == 0.0 && !state.canRate)
             binding.ratingBar.gone()
         else binding.ratingBar.visible()
+        handleEditButton(state.companyId, state.canModerate)
+    }
+
+    private fun handleEditButton(companyId: String, canModerate: Boolean) {
+        if (canModerate) binding.editCompany.visible()
+        else binding.editCompany.gone()
+        binding.editCompany.setOnClickListener {
+            requireActivity().getNavComponent()?.navigate(
+                R.id.navigation_company_create,
+                Bundle().apply {
+                    putString(CreateCompanyFragment.COMPANY_ID, companyId)
+                }
+            )
+        }
     }
 
     override fun onDestroyView() {

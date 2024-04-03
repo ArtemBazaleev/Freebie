@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_navigation_company_details_to_navigation_company_reviews"
             app:destination="@id/navigation_company_reviews" />
+        <action
+            android:id="@+id/action_navigation_company_details_to_navigation_company_create2"
+            app:destination="@id/navigation_company_create" />
 
     </fragment>
 
@@ -44,6 +47,11 @@
             android:defaultValue="" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_company_create"
+        android:name="com.freebie.frieebiemobile.ui.company.presentation.CreateCompanyFragment"
+        tools:layout="@layout/fragment_create_company"/>
 
 
 </navigation>
