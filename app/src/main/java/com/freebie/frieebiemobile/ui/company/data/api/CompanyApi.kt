@@ -128,8 +128,8 @@ class CompanyApiImpl @Inject constructor(
 
     private fun mapLink(externalLinkType: ExternalLinkType): CompanyModelProtos.LinkType {
         return when (externalLinkType) {
-            ExternalLinkType.WHATSAPP -> CompanyModelProtos.LinkType.TELEGRAM
-            ExternalLinkType.INSTAGRAM -> CompanyModelProtos.LinkType.TELEGRAM
+            ExternalLinkType.WHATSAPP -> CompanyModelProtos.LinkType.WHATSAPP
+            ExternalLinkType.INSTAGRAM -> CompanyModelProtos.LinkType.INSTAGRAM
             ExternalLinkType.TELEGRAM -> CompanyModelProtos.LinkType.TELEGRAM
         }
     }
