@@ -2,8 +2,10 @@ package com.freebie.frieebiemobile.upload
 
 import com.freebie.frieebiemobile.network.HttpAccess
 import com.freebie.frieebiemobile.network.Method
+import com.freebie.protos.CommonModelProtos
 import com.freebie.protos.CommonModelProtos.PartialUploadCreateRequest
 import com.freebie.protos.CommonModelProtos.PartialUploadCreateResponse
+import com.google.protobuf.ByteString
 import javax.inject.Inject
 
 interface UploadApi {
@@ -35,9 +37,25 @@ class UploadApiImpl @Inject constructor(
         PartialUploadCreateResponse.parseFrom(response.bodyAsArray)
     }
 
-//    suspend fun uploadChunk() = runCatching {
-//        val request = PartialUpload
-//    }
+    suspend fun uploadChunk(
+        uploadId: String,
+        chunk: ByteArray,
+        partNumber: Int
+    ) = runCatching {
+        val request = CommonModelProtos
+            .PartUploadRequest
+            .newBuilder()
+            .setBody(ByteString.copyFrom(chunk))
+            .setPart(partNumber)
+            .build()
+
+        val response = httpAccess.httpRequest(
+            requestUrlSegment = PARTIAL_UPLOAD + uploadId,
+            method = Method.POST,
+            body = request.toByteArray()
+        )
+        CommonModelProtos.PartUploadResponse.parseFrom(response.bodyAsArray)
+    }
 
     companion object {
         const val CREATE_UPLOAD = "v1/partial/upload"

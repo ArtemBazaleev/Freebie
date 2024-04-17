@@ -2,6 +2,7 @@ package com.freebie.frieebiemobile.upload
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.format
@@ -13,10 +14,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -26,7 +25,7 @@ interface UploadRepository {
 }
 
 class UploadRepositoryImpl @Inject constructor(
-    @ApplicationContext private val appContext: Context
+    @ApplicationContext private val appContext: Context,
     private val api: UploadApiImpl
 ) : UploadRepository, CoroutineScope {
 
@@ -51,35 +50,33 @@ class UploadRepositoryImpl @Inject constructor(
     }
 
 
-    private suspend fun partialFileUpload(
+    suspend fun partialFileUpload(
         fileToUpload: File
     ): String = withContext(Dispatchers.IO) {
         val iterationCount = ceil((fileToUpload.length().toFloat() / MAX_UPLOAD_CHUNK_SIZE)).toInt()
+
+        Log.d("partialFileUpload", "partialFileUpload file = ${fileToUpload.absolutePath} iterations = $iterationCount")
         val response = api.createUpload(
             contentType = IMAGE_NAME,
             fileName = fileToUpload.name,
             fileLength = fileToUpload.length(),
             filePartsCount = iterationCount
         )
-        response.onSuccess {
+        response.onSuccess { uploadResponse ->
+            Log.d("partialFileUpload", "upload created id = ${uploadResponse.uploadId}")
             fileToUpload.inputStream().use { inputStream ->
                 val buffer = ByteArray(MAX_UPLOAD_CHUNK_SIZE)
-                var offset = 0
-                var readBytesCount: Int
+                repeat(iterationCount) { chunkCount ->
+                    inputStream.read(buffer, 0, MAX_UPLOAD_CHUNK_SIZE)
 
-
-                repeat(iterationCount) {
-                    readBytesCount = inputStream.read(buffer, 0, MAX_UPLOAD_CHUNK_SIZE)
-                    val chunk = buffer.toRequestBody(IMAGE_NAME.toMediaTypeOrNull(), 0, readBytesCount)
-                    val part = chunk.toFormData(UPLOAD_FILE_FORM_DATA_NAME, fileToUpload.name)
-                    val dataUploadResponseWrapper = api.sendPartialUploadData(uploadId, offset, part)
-
+                    Log.d("partialFileUpload", "start to upload chunk $chunkCount buffer = $buffer")
+                    val uploadedChunk = api.uploadChunk(uploadResponse.uploadId, buffer, chunkCount + 1)
+                    Log.d("partialFileUpload", "uploadedChunk count = $chunkCount id = ${uploadedChunk.getOrNull()?.uploadId}")
                 }
             }
         }.onFailure {
             return@withContext ""
         }
-
 
         return@withContext ""
     }

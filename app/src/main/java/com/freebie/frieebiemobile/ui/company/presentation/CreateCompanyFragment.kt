@@ -1,12 +1,25 @@
 package com.freebie.frieebiemobile.ui.company.presentation
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -23,6 +36,7 @@ import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationE
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class CreateCompanyFragment : Fragment() {
@@ -49,6 +63,7 @@ class CreateCompanyFragment : Fragment() {
             viewModel.createUpdateCompany()
         }
         addTextListeners()
+        requestImage()
     }
 
     private fun addTextListeners() {
@@ -96,7 +111,7 @@ class CreateCompanyFragment : Fragment() {
     }
 
     private fun handleEvents(event: CompanyCreationEvent) {
-        when(event) {
+        when (event) {
             CompanyCreationEvent.CloseSelf -> activity?.onBackPressedDispatcher?.onBackPressed()
             CompanyCreationEvent.ErrorWhileCreatingCompany -> Toast.makeText(
                 requireContext(),
@@ -176,6 +191,68 @@ class CreateCompanyFragment : Fragment() {
         binding.cityAutoComplete.setAdapter(adapter)
         binding.cityAutoComplete.setOnItemClickListener { parent, view, position, id ->
             viewModel.setCity(items[position])
+        }
+    }
+
+    private fun requestImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            verifyStoragePermissions()
+        }
+        val galleryIntent =
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        val startForResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data?.data
+                viewModel.sendFile(getRealPathFromURI(requireContext(), data))
+            }
+        }
+        startForResult.launch(galleryIntent)
+    }
+
+    fun getRealPathFromURI(context: Context, contentUri: Uri?): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } finally {
+            cursor?.close()
+        }
+    }
+
+    // Storage Permissions
+    private val REQUEST_EXTERNAL_STORAGE = 1
+    private val PERMISSIONS_STORAGE = arrayOf<String>(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun verifyStoragePermissions() {
+        // Check if we have write permission
+        val permission = ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            requireActivity().requestPermissions(
+                arrayOf(
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                ),
+                REQUEST_EXTERNAL_STORAGE
+            )
         }
     }
 

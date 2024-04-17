@@ -80,7 +80,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.google.dagger:hilt-android:2.44")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    implementation 'com.freebie.protobuf:freebie-api:0.0.85-snapshot'
+    implementation 'com.freebie.protobuf:freebie-api:0.0.87-snapshot'
     implementation("com.google.protobuf:protobuf-java:3.22.2")
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
     implementation 'com.jakewharton.timber:timber:5.0.1'

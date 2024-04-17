@@ -1,6 +1,8 @@
 package com.freebie.frieebiemobile.ui.company.presentation
 
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.ui.category.domain.model.CategoryModel
@@ -16,6 +18,7 @@ import com.freebie.frieebiemobile.ui.company.domain.usecase.UpdateCompanyUseCase
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationEvent
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationUiModel
 import com.freebie.frieebiemobile.ui.company.presentation.model.CreateCompanyFieldError
+import com.freebie.frieebiemobile.upload.UploadRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -23,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
@@ -32,7 +36,8 @@ class CreateCompanyViewModel @Inject constructor(
     private val createCompany: CreateCompanyUseCase,
     private val updateCompany: UpdateCompanyUseCase,
     private val getEditCompanyInfo: GetEditCompanyInfoUseCase,
-    private val mapper: CategoryMapper
+    private val mapper: CategoryMapper,
+    private val uploadRepositoryImpl: UploadRepositoryImpl
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CompanyCreationUiModel(emptyList(), emptyList()))
@@ -183,5 +188,14 @@ class CreateCompanyViewModel @Inject constructor(
 
         }
 
+    }
+
+    fun sendFile(file: String?) {
+        file?.let {
+            val image = File(it)
+            viewModelScope.launch(Dispatchers.IO) {
+                uploadRepositoryImpl.partialFileUpload(image)
+            }
+        }
     }
 }
