@@ -13,7 +13,7 @@ class OffersViewHolder(itemView: View) : ViewHolder(itemView) {
 
     init {
         recyclerView.adapter = adapter
-//        recyclerView.addItemDecoration(OffsetDecorator())
+        recyclerView.itemAnimator = null
     }
 
     fun bind(data: OffersItem) {

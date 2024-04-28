@@ -50,4 +50,9 @@
     <string name="select_category">Select category</string>
     <string name="field_empty">Field is empty</string>
     <string name="telegram_link">Telegram link</string>
+    <string name="add_company_avatar">Add company avatar</string>
+    <string name="change_company_avatar">Change company avatar</string>
+    <string name="create_new_company">Create new company</string>
+    <string name="create_company">Create company</string>
+    <string name="select_city">Select city</string>
 </resources>

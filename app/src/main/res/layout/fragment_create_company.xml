@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -34,7 +33,7 @@
                     android:layout_marginStart="@dimen/default_side_margin"
                     android:layout_marginEnd="@dimen/default_side_margin"
                     android:gravity="start|center"
-                    android:text="Create new company"
+                    android:text="@string/create_new_company"
                     android:textColor="@color/primary_text"
                     android:textSize="26sp" />
 
@@ -47,6 +46,33 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/company_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/add_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_side_margin"
+            android:layout_marginTop="@dimen/default_top_margin"
+            android:layout_marginEnd="@dimen/default_side_margin"
+            android:backgroundTint="@color/regular_card_bg"
+            android:drawablePadding="@dimen/default_side_margin_s"
+            android:gravity="center"
+            android:text="@string/add_company_avatar"
+            android:textAllCaps="false"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/company_avatar" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_company_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -58,7 +84,7 @@
             android:hint="@string/enter_company_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_bar">
+            app:layout_constraintTop_toBottomOf="@id/add_image">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_company_name"
@@ -131,8 +157,9 @@
             android:focusable="true"
             android:foreground="?selectableItemBackground"
             android:gravity="center"
-            android:text="Create company"
+            android:text="@string/create_company"
             android:textColor="@color/white"
+            android:layout_marginTop="@dimen/default_top_margin_xl"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -148,7 +175,7 @@
             android:layout_marginStart="@dimen/default_side_margin"
             android:layout_marginTop="@dimen/default_top_margin_xl"
             android:layout_marginEnd="@dimen/default_side_margin"
-            android:hint="Select city"
+            android:hint="@string/select_city"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include">

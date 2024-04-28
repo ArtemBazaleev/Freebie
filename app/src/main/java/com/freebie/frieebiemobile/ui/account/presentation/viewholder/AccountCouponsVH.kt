@@ -20,6 +20,7 @@ class AccountCouponsVH(
 
     init {
         rvCoupons.adapter = adapter
+        rvCoupons.itemAnimator = null
     }
 
     fun bind(model: AccountCouponsUIModel) {

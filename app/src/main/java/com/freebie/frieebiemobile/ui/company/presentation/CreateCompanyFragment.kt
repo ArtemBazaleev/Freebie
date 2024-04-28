@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -19,23 +18,28 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
 import com.freebie.frieebiemobile.R
 import com.freebie.frieebiemobile.databinding.FragmentCreateCompanyBinding
 import com.freebie.frieebiemobile.network.DEFAULT_LOCALE
+import com.freebie.frieebiemobile.permissions.PermissionManagerImpl
+import com.freebie.frieebiemobile.permissions.PermissionResult
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyEditModel
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationEvent
 import com.freebie.frieebiemobile.ui.company.presentation.model.CompanyCreationUiModel
+import com.freebie.frieebiemobile.ui.utils.gone
+import com.freebie.frieebiemobile.ui.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -46,6 +50,18 @@ class CreateCompanyFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<CreateCompanyViewModel>()
+
+    @Inject
+    lateinit var permissionManager: PermissionManagerImpl
+
+    private val startForResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data?.data
+            viewModel.setCompanyAvatar(getRealPathFromURI(requireContext(), data))
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -63,7 +79,13 @@ class CreateCompanyFragment : Fragment() {
             viewModel.createUpdateCompany()
         }
         addTextListeners()
-        requestImage()
+        initClickListeners()
+    }
+
+    private fun initClickListeners() {
+        binding.addImage.setOnClickListener {
+            requestImage()
+        }
     }
 
     private fun addTextListeners() {
@@ -149,7 +171,21 @@ class CreateCompanyFragment : Fragment() {
     private fun handleState(state: CompanyCreationUiModel) {
         initDropDownMenuCategories(state.categories.map { it.name })
         initDropDownMenuCities(state.cities)
+        handleAvatar(state)
         handleErrors(state)
+    }
+
+    private fun handleAvatar(state: CompanyCreationUiModel) {
+        if (state.remoteAvatar.isNullOrEmpty() && state.localFileAvatar.isNullOrEmpty()) {
+            binding.addImage.setText(R.string.add_company_avatar)
+            binding.companyAvatar.gone()
+        } else {
+            binding.addImage.setText(R.string.change_company_avatar)
+            binding.companyAvatar.visible()
+            Glide.with(binding.companyAvatar)
+                .load(state.localFileAvatar ?: state.remoteAvatar)
+                .into(binding.companyAvatar)
+        }
     }
 
     private fun handleErrors(state: CompanyCreationUiModel) {
@@ -198,20 +234,9 @@ class CreateCompanyFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             verifyStoragePermissions()
         }
-        val galleryIntent =
-            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        val startForResult = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data?.data
-                viewModel.sendFile(getRealPathFromURI(requireContext(), data))
-            }
-        }
-        startForResult.launch(galleryIntent)
     }
 
-    fun getRealPathFromURI(context: Context, contentUri: Uri?): String? {
+    fun getRealPathFromURI(context: Context, contentUri: Uri?): String? { //todo move to utils
         var cursor: Cursor? = null
         return try {
             val proj = arrayOf(MediaStore.Images.Media.DATA)
@@ -241,18 +266,19 @@ class CreateCompanyFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun verifyStoragePermissions() {
         // Check if we have write permission
-        val permission = ActivityCompat.checkSelfPermission(
-            requireActivity(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            requireActivity().requestPermissions(
-                arrayOf(
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
+        permissionManager.requestPermissions(Manifest.permission.READ_MEDIA_IMAGES) { result ->
+            when (result) {
+                PermissionResult.Granted -> {
+                    val galleryIntent =
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startForResult.launch(galleryIntent)
+                }
+
+                else -> {
+                    Toast.makeText(requireContext(), "Permissions required", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
     }
 

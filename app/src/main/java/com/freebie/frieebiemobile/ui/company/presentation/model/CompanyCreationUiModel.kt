@@ -9,7 +9,9 @@ data class CompanyCreationUiModel (
     val cities: List<String>,
     val errorCompanyName: CreateCompanyFieldError? = null,
     val errorDescription: CreateCompanyFieldError? = null,
-    val errorCategory: CreateCompanyFieldError? = null
+    val errorCategory: CreateCompanyFieldError? = null,
+    val remoteAvatar: String? = null,
+    val localFileAvatar: String? = null,
 )
 
 enum class CreateCompanyFieldError(

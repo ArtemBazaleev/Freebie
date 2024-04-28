@@ -89,10 +89,10 @@ class CreateCompanyViewModel @Inject constructor(
     fun createUpdateCompany() {
         if (areFieldsFilled()) {
             Log.d("CreateCompanyViewModel", "start company creation")
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 val params = CompanyCreationParams(
                     categoryId = currentCategoryId!!,
-                    avatar = null,
+                    avatar = getCompanyAvatarOrNull(),
                     locale = locales.values.toList(),
                     links = links.values.toList(),
                     city = city!!
@@ -110,6 +110,15 @@ class CreateCompanyViewModel @Inject constructor(
             }
         } else {
             Log.d("CreateCompanyViewModel", "areFieldsFilled = false")
+        }
+    }
+
+    private suspend fun getCompanyAvatarOrNull(): String?  {
+        val localFile = _state.value.localFileAvatar
+        return if (localFile == null) {
+            null
+        } else {
+            uploadRepositoryImpl.partialFileUpload(File(localFile))
         }
     }
 
@@ -177,9 +186,10 @@ class CreateCompanyViewModel @Inject constructor(
                             )
                         )
                     )
+                    _state.emit(_state.value.copy(remoteAvatar = model.avatar))
                 }
                 .onFailure {
-                    Log.d(
+                    Log.e(
                         "CreateCompanyViewModel",
                         "getEditCompanyInfo error ${it.message}"
                     )
@@ -190,11 +200,10 @@ class CreateCompanyViewModel @Inject constructor(
 
     }
 
-    fun sendFile(file: String?) {
+    fun setCompanyAvatar(file: String?) {
         file?.let {
-            val image = File(it)
-            viewModelScope.launch(Dispatchers.IO) {
-                uploadRepositoryImpl.partialFileUpload(image)
+            viewModelScope.launch(Dispatchers.Default) {
+                _state.emit(_state.value.copy(localFileAvatar = file))
             }
         }
     }
