@@ -14,5 +14,6 @@ enum class StatusCoupon(val intValue: Int){
     UNRECOGNIZED(3),
     RESERVED(4),
     IN_REVIEW(5),
-    CANCELED(6)
+    CANCELED(6),
+    HIDDEN(7)
 }

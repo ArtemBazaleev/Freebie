@@ -33,6 +33,7 @@ class CouponDescriptionMapperImpl @Inject constructor() {
             CouponDescriptionModelProtos.Status.ACTIVE -> CouponStatus.ACTIVE
             CouponDescriptionModelProtos.Status.EXPIRED -> CouponStatus.EXPIRED
             CouponDescriptionModelProtos.Status.UNRECOGNIZED -> CouponStatus.UNRECOGNIZED
+            CouponDescriptionModelProtos.Status.HIDDEN -> CouponStatus.HIDDEN
         }
     }
 

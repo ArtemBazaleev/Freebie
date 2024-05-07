@@ -155,7 +155,7 @@ class CreateCompanyFragment : Fragment() {
         val description = model.locale.firstOrNull()?.description ?: ""
         binding.etCompanyName.setText(name)
         binding.etCompanyDescription.setText(description)
-        binding.cityAutoComplete.setText(model.city)
+        binding.cityAutoComplete.setText(model.cityName)
         binding.categoryAutoComplete.setText(model.categoryName)
         model.links.findLast { it.type == ExternalLinkType.WHATSAPP }?.let {
             binding.include.etWhatsapp.setText(it.url)
@@ -170,7 +170,7 @@ class CreateCompanyFragment : Fragment() {
 
     private fun handleState(state: CompanyCreationUiModel) {
         initDropDownMenuCategories(state.categories.map { it.name })
-        initDropDownMenuCities(state.cities)
+        initDropDownMenuCities(state.cities.map { it.name })
         handleAvatar(state)
         handleErrors(state)
     }

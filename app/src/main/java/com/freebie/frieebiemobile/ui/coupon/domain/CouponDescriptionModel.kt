@@ -23,5 +23,6 @@ enum class CouponStatus(val statusInt: Int){
     USED(3),
     CANCELED(4),
     RESERVED(5),
-    UNRECOGNIZED(-1)
+    UNRECOGNIZED(-1),
+    HIDDEN(6);
 }

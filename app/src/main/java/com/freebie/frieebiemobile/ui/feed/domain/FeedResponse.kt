@@ -34,5 +34,5 @@ class BookletByStatus(
 )
 
 enum class BookletStatus {
-    IN_REVIEW, ACTIVE, EXPIRED, UNRECOGNIZED
+    IN_REVIEW, ACTIVE, EXPIRED, UNRECOGNIZED, HIDDEN
 }

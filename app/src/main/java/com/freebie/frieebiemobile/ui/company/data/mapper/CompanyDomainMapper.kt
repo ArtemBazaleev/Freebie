@@ -77,7 +77,7 @@ class CompanyDomainMapper @Inject constructor(
             categoryId = proto.categoryId,
             companyId = companyId,
             avatar = proto.avatarUrl,
-            city = proto.city,
+            cityId = proto.city,
             locale = proto.localesList.map { locale ->
                 Locale(
                     langCode = locale.locale,

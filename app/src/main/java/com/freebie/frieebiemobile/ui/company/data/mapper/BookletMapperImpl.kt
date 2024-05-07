@@ -33,6 +33,7 @@ class BookletMapperImpl @Inject constructor() {
             BookletModelProtos.Status.ACTIVE -> BookletStatus.ACTIVE
             BookletModelProtos.Status.EXPIRED -> BookletStatus.EXPIRED
             BookletModelProtos.Status.UNRECOGNIZED -> BookletStatus.UNRECOGNIZED
+            BookletModelProtos.Status.HIDDEN -> BookletStatus.HIDDEN
         }
     }
 

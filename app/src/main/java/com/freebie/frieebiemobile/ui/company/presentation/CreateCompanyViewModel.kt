@@ -1,13 +1,14 @@
 package com.freebie.frieebiemobile.ui.company.presentation
 
-import android.net.Uri
 import android.util.Log
-import androidx.core.net.toFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freebie.frieebiemobile.ui.category.domain.model.CategoryModel
 import com.freebie.frieebiemobile.ui.category.domain.usecase.GetCategoryRepositoryUseCase
 import com.freebie.frieebiemobile.ui.category.mapper.CategoryMapper
+import com.freebie.frieebiemobile.ui.city.domain.model.CityModel
+import com.freebie.frieebiemobile.ui.city.domain.usecase.GetCityRepositoryUseCase
+import com.freebie.frieebiemobile.ui.city.mapper.CityMapper
 import com.freebie.frieebiemobile.ui.company.domain.model.CompanyCreationParams
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalCompanyLink
 import com.freebie.frieebiemobile.ui.company.domain.model.ExternalLinkType
@@ -37,7 +38,9 @@ class CreateCompanyViewModel @Inject constructor(
     private val updateCompany: UpdateCompanyUseCase,
     private val getEditCompanyInfo: GetEditCompanyInfoUseCase,
     private val mapper: CategoryMapper,
-    private val uploadRepositoryImpl: UploadRepositoryImpl
+    private val uploadRepositoryImpl: UploadRepositoryImpl,
+    private val getCitiesUseCase: GetCityRepositoryUseCase,
+    private val cityMapper: CityMapper
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CompanyCreationUiModel(emptyList(), emptyList()))
@@ -46,7 +49,7 @@ class CreateCompanyViewModel @Inject constructor(
     private val locales = ConcurrentHashMap<String, Locale>()
     private val links = ConcurrentHashMap<ExternalLinkType, ExternalCompanyLink>()
     private var currentCategoryId: String? = null
-    private var city: String? = null
+    private var currentCityId: String? = null
 
     // if companyId then update
     @Volatile
@@ -58,11 +61,11 @@ class CreateCompanyViewModel @Inject constructor(
     val events: Flow<CompanyCreationEvent>
         get() = _events.receiveAsFlow()
 
-    private suspend fun handleCategories(categories: List<CategoryModel>) {
+    private suspend fun handleCategoriesAndCities(categories: List<CategoryModel>, cities: List<CityModel>) {
         _state.emit(
             CompanyCreationUiModel(
                 categories = categories.map(mapper::mapToUi),
-                cities = listOf("Limassol", "Nikosia", "Pafos", "Lefkosia", "Ayia Napa")
+                cities = cities.map (cityMapper::mapToUi)
             )
         )
     }
@@ -79,7 +82,7 @@ class CreateCompanyViewModel @Inject constructor(
 
     fun setCity(name: String) {
         areFieldsFilled()
-        city = name
+        currentCityId = _state.value.cities.findLast { it.name == name } ?.id
     }
 
     fun addLink(link: ExternalCompanyLink) {
@@ -95,7 +98,7 @@ class CreateCompanyViewModel @Inject constructor(
                     avatar = getCompanyAvatarOrNull(),
                     locale = locales.values.toList(),
                     links = links.values.toList(),
-                    city = city!!
+                    city = currentCityId!!
                 )
                 val result = if (companyId == null)
                     createCompany.createCompany(params)
@@ -154,14 +157,24 @@ class CreateCompanyViewModel @Inject constructor(
             "setCompanyId = $companyId"
         )
         viewModelScope.launch(Dispatchers.Default) {
-            val categories = getCategoriesUseCase.invoke().getOrNull()
-            categories?.let { handleCategories(it) } ?: run {
+            val categories = getCategoriesUseCase.invoke().getOrNull() ?: emptyList()
+            if(categories.isEmpty()){
                 //TODO show error
                 Log.d(
                     "CreateCompanyViewModel",
                     "error while getting categories"
                 )
             }
+            val cities = getCitiesUseCase.invoke().getOrNull() ?: emptyList()
+            if(cities.isEmpty()){
+                //TODO show error
+                Log.d(
+                    "CreateCompanyViewModel",
+                    "error while getting cities"
+                )
+            }
+
+            handleCategoriesAndCities(categories, cities)
             if (companyId.isNullOrEmpty()) {
                 return@launch
             }
@@ -175,14 +188,15 @@ class CreateCompanyViewModel @Inject constructor(
                         "CreateCompanyViewModel",
                         "success ${model}"
                     )
-                    this@CreateCompanyViewModel.city = model.city
+                    this@CreateCompanyViewModel.currentCityId = model.cityId
                     this@CreateCompanyViewModel.currentCategoryId = model.categoryId
                     _events.send(
                         CompanyCreationEvent.CompanyInfoReceived(
                             model.copy(
                                 categoryName = categories.findLast {
                                     it.categoryId == model.categoryId
-                                }?.categoryName ?: ""
+                                }?.categoryName ?: "",
+                                cityName = cities.findLast { it.cityId == model.cityId}?.cityName ?: ""
                             )
                         )
                     )

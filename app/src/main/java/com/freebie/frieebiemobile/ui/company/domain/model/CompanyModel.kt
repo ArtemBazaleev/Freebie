@@ -24,7 +24,8 @@ data class CompanyEditModel(
     val avatar: String?,
     val locale: List<Locale>,
     val links: List<ExternalCompanyLink>,
-    val city: String
+    val cityId: String,
+    val cityName: String = ""
 )
 
 class RatingInfoModel(
